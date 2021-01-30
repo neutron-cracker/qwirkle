@@ -3,7 +3,7 @@ export type StoneNotation = [
   y: number,
   color: Colors,
   shape: Shapes,
-  player: number
+  player?: number | undefined
 ];
 
 export enum Colors {
@@ -19,7 +19,7 @@ export enum Shapes {
   Square = 1,
   Circle = 2,
   Flower = 3,
-  Star = 4,
+  Quadrogram = 4,
   Diamond = 5,
   Octogram = 6,
 }

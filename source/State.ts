@@ -2,7 +2,7 @@ import { Turn } from './Turn';
 import { StoneNotation } from './Types';
 
 export class State {
-  private turns: Array<Turn> = [];
+  public turns: Array<Turn> = [];
 
   constructor(initialStoneNotations: Array<StoneNotation>) {
     const initialTurn = new Turn(initialStoneNotations, this);
@@ -11,12 +11,11 @@ export class State {
 
   addTurn(turn: Turn) {}
 
-  get stones () {
-    const stones = []
+  get stones() {
+    const stones = [];
     for (const turn of this.turns) {
-      stones.push(...turn.stones)
+      stones.push(...turn.stones);
     }
-    return stones
+    return stones;
   }
 }
-
