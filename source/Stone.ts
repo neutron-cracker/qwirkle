@@ -62,8 +62,10 @@ export class Stone {
 
     getStonesOneSide(1);
     getStonesOneSide(-1);
-
+    bar.sort((a: Stone, b: Stone) => b[direction] - a[direction]);
     return bar;
+
+
   }
 
   public get row() {
@@ -72,5 +74,9 @@ export class Stone {
 
   public get column() {
     return this.bar(Direction.Vertical);
+  }
+
+  toString () {
+    return `${this.x}-${this.y}-${this.color}-${this.shape}`
   }
 }

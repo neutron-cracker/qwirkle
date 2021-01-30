@@ -9,7 +9,9 @@ export class State {
     this.turns.push(initialTurn);
   }
 
-  addTurn(turn: Turn) {}
+  addTurn(turn: Turn) {
+    console.log(turn.isValid)
+  }
 
   get stones() {
     const stones = [];

@@ -13,5 +13,18 @@ export class Turn {
     );
   }
 
-  public isValid() {}
+  public get isValid() {
+    const checkedBars = new Set();
+    for (const stone of this.stones) {
+      const stoneColumn = stone.column
+      if (!checkedBars.has(stoneColumn.join())) {
+        // 1
+        checkedBars.add(stoneColumn.join())
+      }
+    }
+
+
+
+    return null;
+  }
 }

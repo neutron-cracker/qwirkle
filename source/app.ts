@@ -1,4 +1,5 @@
 import { State } from './State';
+import { Turn } from './Turn';
 import { StoneNotation, Colors, Shapes } from './Types';
 
 const initialState: Array<StoneNotation> = [
@@ -9,4 +10,8 @@ const initialState: Array<StoneNotation> = [
 
 const state = new State(initialState);
 
-console.log(state.stones[0].neighbours);
+const newTurn = new Turn([
+  [1, 2, Colors.Red, Shapes.Circle, 1]
+], state)
+
+state.addTurn(newTurn)
