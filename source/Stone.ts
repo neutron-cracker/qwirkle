@@ -4,8 +4,8 @@ import { State } from './State';
 export class Stone {
   public x: number;
   public y: number;
-  private color: Colors;
-  private shape: Shapes;
+  public color: Colors;
+  public shape: Shapes;
   private player: number | undefined;
   private state: State;
 
