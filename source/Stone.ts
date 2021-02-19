@@ -45,18 +45,20 @@ export class Stone {
     return neighbours.filter((neighbour) => neighbour);
   }
 
-  private bar(direction: Direction) {
+  public bar(direction: Direction) {
     const oppositeDirection = direction === Direction.Horizontal ? Direction.Vertical : Direction.Horizontal;
     const bar = [];
+
+    bar.push(this);
 
     const getStonesOneSide = (sum) => {
       let currentStone = this;
       while (currentStone) {
-        bar.push(currentStone);
         currentStone = this.state.stones.find(
           (stone) => stone[direction] === currentStone[direction] + sum && 
             stone[oppositeDirection] === currentStone[oppositeDirection]
         );
+        if (currentStone) bar.push(currentStone);
       }
     };
 

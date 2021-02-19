@@ -6,9 +6,15 @@ import { referenceState1 } from './stateReferences';
 const testState = new State(referenceState1);
 
 test('turn validation', () => {
-  const newTurn = new Turn([
-    [1, 2, Colors.Red, Shapes.Circle, 1]
+  const correctTurn = new Turn([
+    [2, 1, Colors.Red, Shapes.Circle, 1]
   ], testState)
 
-  expect(newTurn.isValid).toBe(true)
+  expect(correctTurn.isValid).toBe(true)
+
+  const wrongTurn = new Turn([
+    [2, 1, Colors.Red, Shapes.Square, 1]
+  ], testState)
+
+  expect(wrongTurn.isValid).toBe(false)
 })
