@@ -5,7 +5,8 @@ import { Direction } from "./Types"
  * This function is used in two contexts, one where the stones are already a possible bar, and one where the stones is the whole state.
  * In the latter one the initialStone should be given, in the first one it is not needed.
  */
-export function bar (stones: Array<Stone>, direction: Direction, initialStone: Stone = null) {
+export function bar (givenStones: Array<Stone>, direction: Direction, initialStone: Stone = null, turnStones: Array<Stone> = []) {
+    const stones = [...givenStones, ...turnStones]
     if (initialStone === null) initialStone = stones[0];
     const oppositeDirection = direction === Direction.Horizontal ? Direction.Vertical : Direction.Horizontal;
     const bar = [];
@@ -76,4 +77,17 @@ export const sameItems = (a: Array<any>, b: Array<any>) => {
 
 export function onlyUnique(value, index, self) {
     return self.indexOf(value) === index;
-  }
+}
+
+export function barIterator (barStones: Array<Stone> = []) {
+    const bars = []
+
+    const direction = getDirectionOfBar(barStones)
+    const firstStone = barStones[0]
+    const oppositeDirection = direction === Direction.Horizontal ? Direction.Vertical : Direction.Horizontal;
+    bars.push(firstStone.bar(direction, barStones))
+
+    barStones.every(stone => bars.push(stone.bar(oppositeDirection, barStones)))
+
+    return bars
+}

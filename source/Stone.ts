@@ -7,7 +7,7 @@ export class Stone {
   public color: Colors;
   public shape: Shapes;
   private player: number | undefined;
-  private state: State;
+  public state: State;
   constructor(stoneNotation: StoneNotation, state: State = null) {
     [this.x, this.y, this.color, this.shape, this.player] = stoneNotation;
     this.state = state ?? new State();
@@ -44,8 +44,8 @@ export class Stone {
     return neighbours.filter((neighbour) => neighbour);
   }
 
-  public bar(direction: Direction) {
-    return bar(this.state.stones, direction, this)
+  public bar(direction: Direction, turnStones: Array<Stone> = []) {
+    return bar(this.state.stones, direction, this, turnStones)
   }
 
   public get row() {

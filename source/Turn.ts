@@ -1,7 +1,7 @@
 import { Stone } from './Stone';
 import { State } from './State';
 import { StoneNotation, Direction } from './Types';
-import { isValidBar, isBar, getDirectionOfBar, sameItems, onlyUnique } from './helpers';
+import { isValidBar, isBar, getDirectionOfBar, sameItems, onlyUnique, barIterator } from './helpers';
 
 export class Turn {
   public stones: Array<Stone> = [];
@@ -14,15 +14,29 @@ export class Turn {
 
   public get isValid() {
     const turnStonesAreValid = isBar(this.stones)
-    const allUniqueStones = this.stones.length === this.stones.filter(onlyUnique).length
-    const direction = getDirectionOfBar(this.stones)
-    const firstStone = this.stones[0]
-    const oppositeDirection = direction === Direction.Horizontal ? Direction.Vertical : Direction.Horizontal;
-    const mainBarIsValid = isValidBar(firstStone.bar(direction))
-    // const sameStones = sameItems(firstStone.bar(direction, this.stones), this.stones)
 
-    const allOtherBarsAreValid = this.stones.every(stone => isValidBar(stone.bar(oppositeDirection)))
-    return allUniqueStones && turnStonesAreValid && mainBarIsValid && allOtherBarsAreValid;
+    const allUniqueStones = this.stones.length === this.stones.filter(onlyUnique).length
+  
+    const allBarsAreValid = barIterator(this.stones).every(bar => isValidBar(bar))
+
+    return allUniqueStones && turnStonesAreValid && allBarsAreValid;
+  }
+
+  public get score () {
+    let points = 0
+
+    const bars = barIterator(this.stones)
+    for (const bar of bars) {
+      const qwirklePoints = bar.length === 6 ? 6 : 0
+      const stonePoints = bar.length > 1 ? bar.length : 0
+
+      points += qwirklePoints + stonePoints
+    }
+
+    // Special use case for a start with one stone.
+    if (points === 0) points = 1
+
+    return points
   }
 
 }
