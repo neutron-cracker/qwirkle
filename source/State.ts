@@ -4,7 +4,7 @@ import { StoneNotation } from './Types';
 export class State {
   public turns: Array<Turn> = [];
 
-  constructor(initialStoneNotations: Array<StoneNotation>) {
+  constructor(initialStoneNotations: Array<StoneNotation> = []) {
     const initialTurn = new Turn(initialStoneNotations, this);
     this.turns.push(initialTurn);
   }

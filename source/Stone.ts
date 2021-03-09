@@ -1,6 +1,6 @@
 import { StoneNotation, Colors, Shapes, Direction } from './Types';
 import { State } from './State';
-
+import { bar } from './helpers'
 export class Stone {
   public x: number;
   public y: number;
@@ -8,10 +8,9 @@ export class Stone {
   public shape: Shapes;
   private player: number | undefined;
   private state: State;
-
-  constructor(stoneNotation: StoneNotation, state: State) {
+  constructor(stoneNotation: StoneNotation, state: State = null) {
     [this.x, this.y, this.color, this.shape, this.player] = stoneNotation;
-    this.state = state;
+    this.state = state ?? new State();
   }
 
   public get neighbours() {
@@ -46,28 +45,7 @@ export class Stone {
   }
 
   public bar(direction: Direction) {
-    const oppositeDirection = direction === Direction.Horizontal ? Direction.Vertical : Direction.Horizontal;
-    const bar = [];
-
-    bar.push(this);
-
-    const getStonesOneSide = (sum) => {
-      let currentStone = this;
-      while (currentStone) {
-        currentStone = this.state.stones.find(
-          (stone) => stone[direction] === currentStone[direction] + sum && 
-            stone[oppositeDirection] === currentStone[oppositeDirection]
-        );
-        if (currentStone) bar.push(currentStone);
-      }
-    };
-
-    getStonesOneSide(1);
-    getStonesOneSide(-1);
-    bar.sort((a: Stone, b: Stone) => b[direction] - a[direction]);
-    return bar;
-
-
+    return bar(this.state.stones, direction, this)
   }
 
   public get row() {

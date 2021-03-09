@@ -1,9 +1,33 @@
 import { Stone } from "./Stone";
 import { Direction } from "./Types"
 
-    // No gaps in the bar: eg.. 1 2 _ 4
-    // Must not be on top of other stones.
-    // 
+/**
+ * This function is used in two contexts, one where the stones are already a possible bar, and one where the stones is the whole state.
+ * In the latter one the initialStone should be given, in the first one it is not needed.
+ */
+export function bar (stones: Array<Stone>, direction: Direction, initialStone: Stone = null) {
+    if (initialStone === null) initialStone = stones[0];
+    const oppositeDirection = direction === Direction.Horizontal ? Direction.Vertical : Direction.Horizontal;
+    const bar = [];
+
+    bar.push(initialStone);
+
+    const getStonesOneSide = (sum: number) => {
+      let currentStone = initialStone;
+      while (currentStone) {
+        currentStone = stones.find(
+          (stone) => stone[direction] === currentStone[direction] + sum && 
+            stone[oppositeDirection] === currentStone[oppositeDirection]
+        );
+        if (currentStone) bar.push(currentStone);
+      }
+    };
+
+    getStonesOneSide(1);
+    getStonesOneSide(-1);
+    bar.sort((a: Stone, b: Stone) => b[direction] - a[direction]);
+    return bar;
+}
 
 export function isValidBar (stones: Array<Stone>){
     const firstStone = stones[0];
@@ -26,7 +50,11 @@ export function isBar (stones: Array<Stone>) {
     const oneColumn = stones.every((stone) => stone.x === firstStone.x);
     const oneRow = stones.every((stone) => stone.y === firstStone.y);
     const isOneBar = (oneRow || oneColumn) && oneRow !== oneColumn || stones.length === 1;
-    return isOneBar
+
+    const direction = getDirectionOfBar(stones)
+    const continuousBar = bar(stones, direction).length === stones.length
+
+    return isOneBar && continuousBar
 }
 
 export function getDirectionOfBar (stones: Array<Stone>) {
@@ -40,3 +68,12 @@ export function turnStonesAreValid(stateStones: Array<Stone>, turnStones: Array<
     const isOneBar = isBar(turnStones)
     return noOverlay && isOneBar
 }
+
+export const sameItems = (a: Array<any>, b: Array<any>) => {
+    if (a.length !== b.length) return false
+    return a.every(item => b.includes(item))
+}
+
+export function onlyUnique(value, index, self) {
+    return self.indexOf(value) === index;
+  }
