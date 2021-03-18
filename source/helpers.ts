@@ -1,5 +1,5 @@
 import { Stone } from "./Stone";
-import { Direction } from "./Types"
+import { Direction, Coordinate } from "./Types"
 
 /**
  * This function is used in two contexts, one where the stones are already a possible bar, and one where the stones is the whole state.
@@ -91,3 +91,9 @@ export function barIterator (barStones: Array<Stone> = []) {
 
     return bars
 }
+
+/**
+ * We picked 1000 because there are no more than thousand stones in the game.
+ * It is prefix.
+ */
+export const sortCoordinates = (a: Coordinate, b: Coordinate) => ((a[0] * 1000) + a[1]) - ((b[0] * 1000) + b[1])

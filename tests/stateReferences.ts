@@ -22,3 +22,8 @@ export const referenceState1: Array<StoneNotation> = [
   [3, 0, Colors.Orange, Shapes.Diamond],
   [0, -3, Colors.Red, Shapes.Octogram],
 ];
+
+export const referenceState2: Array<StoneNotation> = [
+  [0, 0, Colors.Blue, Shapes.Diamond],
+  [0, 1, Colors.Blue, Shapes.Circle],
+];

@@ -28,3 +28,7 @@ export enum Direction {
   Horizontal = 'x',
   Vertical = 'y'
 }
+
+export type ColorShape = [Colors, Shapes]
+
+export type Coordinate = [x: number, y: number]

@@ -1,4 +1,4 @@
-import { StoneNotation, Colors, Shapes, Direction } from './Types';
+import { StoneNotation, Colors, Shapes, Direction, Coordinate } from './Types';
 import { State } from './State';
 import { bar } from './helpers'
 export class Stone {
@@ -13,35 +13,33 @@ export class Stone {
     this.state = state ?? new State();
   }
 
+  // TODO check if we can optimize with neighbourCoordinates
   public get neighbours() {
     const neighbours = [
       this.state.stones.find(
-        (stone) => stone.x === this.x - 1 && stone.y === this.y - 1
-      ),
-      this.state.stones.find(
         (stone) => stone.x === this.x && stone.y === this.y - 1
-      ),
-      this.state.stones.find(
-        (stone) => stone.x === this.x + 1 && stone.y === this.y - 1
       ),
       this.state.stones.find(
         (stone) => stone.x === this.x + 1 && stone.y === this.y
       ),
       this.state.stones.find(
-        (stone) => stone.x === this.x + 1 && stone.y === this.y + 1
-      ),
-      this.state.stones.find(
         (stone) => stone.x === this.x && stone.y === this.y + 1
       ),
       this.state.stones.find(
-        (stone) => stone.x === this.x - 1 && stone.y === this.y + 1
-      ),
-      this.state.stones.find(
-        (stone) => stone.x === this.x - 1 && stone.y === this.y + 1
+        (stone) => stone.x === this.x - 1 && stone.y === this.y
       ),
     ];
 
     return neighbours.filter((neighbour) => neighbour);
+  } 
+
+  public get neighbourCoordinates(): Array<Coordinate> {
+    return [
+      [this.x, this.y - 1],
+      [this.x + 1, this.y],
+      [this.x, this.y + 1],
+      [this.x - 1, this.y],
+    ]
   }
 
   public bar(direction: Direction, turnStones: Array<Stone> = []) {
