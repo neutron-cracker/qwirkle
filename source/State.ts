@@ -1,29 +1,45 @@
 import { Turn } from './Turn';
-import { StoneNotation } from './Types';
-
+import { StoneNotation, Coordinate } from './Types';
+import { Stone } from './Stone';
 export class State extends EventTarget {
   public turns: Array<Turn> = [];
+  public stonesCoordinates: Map<string, Coordinate> = new Map()
+  public borderCoordinates: Map<string, Coordinate> = new Map()
+  public possibleTurns: Map<string, Coordinate>
+  public initialStones: Array<Stone> = [];
 
-  constructor(initialStoneNotations: Array<StoneNotation> = []) {
-    super()
-    const initialTurn = new Turn(initialStoneNotations, this);
-    this.turns.push(initialTurn);
+  setInitial (initialStoneNotations: Array<StoneNotation> = []) {
+    this.initialStones = initialStoneNotations.map( initialStoneNotation => new Stone(initialStoneNotation, this));
+    this.updateCache(this.initialStones);
   }
 
   addTurn(turn: Turn) {
-    console.log(turn.isValid)
     if (turn.isValid) {
       this.turns.push(turn)
-      this.dispatchEvent(new CustomEvent('turn-added', { detail: turn }))
+      this.updateCache(turn.stones)
+      if (turn.stones.length) this.dispatchEvent(new CustomEvent('turn-added', { detail: turn }))
     }
   }
 
   get stones() {
-    const stones = [];
-    for (const turn of this.turns) {
-      stones.push(...turn.stones);
-    }
-    return stones;
+    return [...this.turns.flatMap(turn => turn.stones), ...this.initialStones]
   }
+
+  updateCache (stones: Array<Stone>) {
+    for (const stone of stones) {
+      this.stonesCoordinates.set(stone.coordinates(true), stone.coordinates())
+      this.borderCoordinates.delete(stone.coordinates(true))
+      for (const neighbourCoordinate of stone.allNeighbourCoordinates) {
+        const alreadyExistsInState = !!this.stones.find(innerStone => innerStone.coordinates(true) === neighbourCoordinate.join(','))
+        const isCurrentlyPlayed = !!stones.find(innerStone => innerStone.coordinates(true) === neighbourCoordinate.join(','))
+
+        if (!alreadyExistsInState && !isCurrentlyPlayed) {
+          this.borderCoordinates.set(neighbourCoordinate.join(','), neighbourCoordinate)
+        }
+      }
+    }
+
+  }
+
 
 }

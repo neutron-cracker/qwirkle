@@ -13,11 +13,15 @@ export class Turn {
   }
 
   public get isValid() {
+    if (!this.stones.length) return true
+
     const turnStonesAreValid = isBar(this.stones)
 
     const allUniqueStones = this.stones.length === this.stones.filter(onlyUnique).length
   
-    const allBarsAreValid = barIterator(this.stones).every(bar => isValidBar(bar))
+    const allBarsAreValid = barIterator(this.stones).every(bar => isValidBar(bar, this.state.turns.length === 0))
+
+    console.log(allUniqueStones, turnStonesAreValid, allBarsAreValid, this.stones.length)
 
     return allUniqueStones && turnStonesAreValid && allBarsAreValid;
   }

@@ -13,33 +13,23 @@ export class Stone {
     this.state = state ?? new State();
   }
 
-  // TODO check if we can optimize with neighbourCoordinates
   public get neighbours() {
-    const neighbours = [
-      this.state.stones.find(
-        (stone) => stone.x === this.x && stone.y === this.y - 1
-      ),
-      this.state.stones.find(
-        (stone) => stone.x === this.x + 1 && stone.y === this.y
-      ),
-      this.state.stones.find(
-        (stone) => stone.x === this.x && stone.y === this.y + 1
-      ),
-      this.state.stones.find(
-        (stone) => stone.x === this.x - 1 && stone.y === this.y
-      ),
-    ];
-
+    const neighbours = this.allNeighbourCoordinates
+    .map(coordinate => this.state.stones.find(stone => stone.coordinates(true) === coordinate.join(',')))
     return neighbours.filter((neighbour) => neighbour);
   } 
 
-  public get neighbourCoordinates(): Array<Coordinate> {
+  public get allNeighbourCoordinates(): Array<Coordinate> {
     return [
       [this.x, this.y - 1],
       [this.x + 1, this.y],
       [this.x, this.y + 1],
       [this.x - 1, this.y],
     ]
+  }
+
+  public get neighbourCoordinates(): Array<Coordinate> {
+    return this.neighbours.map((neighbour) => [neighbour.x, neighbour.y])
   }
 
   public bar(direction: Direction, turnStones: Array<Stone> = []) {
@@ -54,7 +44,15 @@ export class Stone {
     return this.bar(Direction.Vertical);
   }
 
+  public coordinates(): Coordinate
+  public coordinates(toString: false): Coordinate
+  public coordinates(toString: true): string
+  public coordinates(toString: boolean = false) {
+    return toString ? `${this.x},${this.y}` : [this.x, this.y]
+  }
+
   toString () {
     return `${this.x}-${this.y}-${this.color}-${this.shape}`
   }
 }
+

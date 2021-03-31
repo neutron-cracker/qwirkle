@@ -30,7 +30,7 @@ export function bar (givenStones: Array<Stone>, direction: Direction, initialSto
     return bar;
 }
 
-export function isValidBar (stones: Array<Stone>){
+export function isValidBar (stones: Array<Stone>, isFirstTurn: boolean = false){
     const firstStone = stones[0];
     const oneColor = stones.every(stone => stone.color === firstStone.color);
     const oneShape = stones.every(stone => stone.shape === firstStone.shape);
@@ -43,7 +43,7 @@ export function isValidBar (stones: Array<Stone>){
     const hasUniqueColorsOrUniqueShapes = (uniqueColors || uniqueShapes) && uniqueColors !== uniqueShapes || stones.length === 1;
     const hasAtleastOneNeighbour = stones.some(stone => stone.neighbours.length)
 
-    return isSingleColoredOrSingleShaped && hasUniqueColorsOrUniqueShapes && hasAtleastOneNeighbour;
+    return isSingleColoredOrSingleShaped && hasUniqueColorsOrUniqueShapes && (hasAtleastOneNeighbour || isFirstTurn);
 }
 
 export function isBar (stones: Array<Stone>) {
@@ -54,7 +54,7 @@ export function isBar (stones: Array<Stone>) {
 
     const direction = getDirectionOfBar(stones)
     const continuousBar = bar(stones, direction).length === stones.length
-
+    // console.log(isOneBar, continuousBar);
     return isOneBar && continuousBar
 }
 

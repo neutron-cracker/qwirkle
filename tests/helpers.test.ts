@@ -23,3 +23,4 @@ test('isBar should return false when a gap is within a bar', () => {
 
   expect(isBar(bar)).toBe(false)
 })
+
