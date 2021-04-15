@@ -4,10 +4,11 @@ import { Stone } from '../source/Stone';
 import { sortCoordinates } from '../source/helpers';
 import { referenceState1, referenceState2 } from './stateReferences';
 
-const testState = new State();
-testState.setInitial(referenceState1)
 
 test('bar returns the correct stones', () => {
+  const testState = new State();
+  testState.setInitial(referenceState1)
+
   const blueDiamond = testState.stones.find(stone => stone.x === 0 && stone.y === 0)
   const row = blueDiamond.row
   const rowNumbers = row.map(stone => stone.y)
@@ -46,4 +47,14 @@ test('getBorderCoordinates returns the correct border coordinates', () => {
     ].sort(sortCoordinates)
 
     expect(border).toEqual(expectedBorder)
+})
+
+test('getBorderCoordinates understands qwirkle rule', () => {
+  const testState = new State();
+  testState.setInitial(referenceState1)
+  const border = [...testState.borderCoordinates.values()]
+  const impossibleLeftStone = border.find((coordinate: Coordinate) => coordinate.join(',') === '-3,0')
+  const impossibleRightStone = border.find((coordinate: Coordinate) => coordinate.join(',') === '4,0')
+  expect(impossibleLeftStone).toEqual(undefined)
+  expect(impossibleRightStone).toEqual(undefined)
 })

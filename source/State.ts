@@ -1,11 +1,10 @@
 import { Turn } from './Turn';
-import { StoneNotation, Coordinate } from './Types';
+import { StoneNotation, Coordinate, Direction } from './Types';
 import { Stone } from './Stone';
 export class State extends EventTarget {
   public turns: Array<Turn> = [];
   public stonesCoordinates: Map<string, Coordinate> = new Map()
   public borderCoordinates: Map<string, Coordinate> = new Map()
-  public possibleTurns: Map<string, Coordinate>
   public initialStones: Array<Stone> = [];
 
   setInitial (initialStoneNotations: Array<StoneNotation> = []) {
@@ -33,7 +32,11 @@ export class State extends EventTarget {
         const alreadyExistsInState = !!this.stones.find(innerStone => innerStone.coordinates(true) === neighbourCoordinate.join(','))
         const isCurrentlyPlayed = !!stones.find(innerStone => innerStone.coordinates(true) === neighbourCoordinate.join(','))
 
-        if (!alreadyExistsInState && !isCurrentlyPlayed) {
+        const direction = stone.x === neighbourCoordinate[0] ? Direction.Vertical : Direction.Horizontal
+        const bar = stone.bar(direction)
+        const isNextToQwirkle = bar.length === 6
+
+        if (!alreadyExistsInState && !isCurrentlyPlayed && !isNextToQwirkle) {
           this.borderCoordinates.set(neighbourCoordinate.join(','), neighbourCoordinate)
         }
       }
