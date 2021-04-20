@@ -31,4 +31,6 @@ export enum Direction {
 
 export type ColorShape = [Colors, Shapes]
 
+export type ColorShapeString = `${Colors}${Shapes}`
+
 export type Coordinate = [x: number, y: number]

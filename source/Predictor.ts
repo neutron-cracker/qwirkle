@@ -1,6 +1,7 @@
+import { createQwirkleBar, getIntersection } from './helpers';
 import { State } from './State'
 import { Stone } from './Stone'
-import { ColorShape, Colors, Shapes, Coordinate, Direction } from './Types'
+import { ColorShape, Colors, Shapes, Coordinate, Direction, ColorShapeString } from './Types'
 
 export class Predictor {
     private possibleStones: { [key in `${Colors}${Shapes}`]: Array<Coordinate> }
@@ -48,25 +49,13 @@ export class Predictor {
             return neighbourStone.bar(direction)
         })
 
-        for (const bar of bars) {
-            const isSameColor = bar[0].color === bar[1].color
-            // create the barQwirkle array containing all the shapes from one color or all the colors one shape and compare with bar
-            // return the stones present in all bars
-            const barQwirkle = []
-        }
-
-        /*
-                 | |
-            ___  |_|_______
-            ___| |X|_|______
-                 | |
-                 | |
-        */
-        //get all connected bars (max 4)
-        //check if bars are valid
-
-        // bar [rood vierkant, rood rondje] Diff: []
-        //  
+        const allPossibleStones = bars.map(bar => {
+            const colorShapeBar = bar.map((stone: Stone): ColorShapeString => `${stone.color}${stone.shape}` as ColorShapeString)
+            const qwirkleBar = createQwirkleBar(bar).map(colorShape => `${colorShape[0]}${colorShape[1]}` as ColorShapeString)
+            return qwirkleBar.filter(colorShapeString => !colorShapeBar.includes(colorShapeString))
+        })
+        const possibleStones = getIntersection(...allPossibleStones)
+        return possibleStones
     }
 
     getPossibleTurns () {

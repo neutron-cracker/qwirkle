@@ -1,5 +1,5 @@
 import { Stone } from "./Stone";
-import { Direction, Coordinate } from "./Types"
+import { Direction, Coordinate, Colors, Shapes, ColorShape } from "./Types"
 
 /**
  * This function is used in two contexts, one where the stones are already a possible bar, and one where the stones is the whole state.
@@ -97,3 +97,35 @@ export function barIterator (barStones: Array<Stone> = []) {
  * It is prefix.
  */
 export const sortCoordinates = (a: Coordinate, b: Coordinate) => ((a[0] * 1000) + a[1]) - ((b[0] * 1000) + b[1])
+
+/**
+ * @see https://www.petermorlion.com/iterating-a-typescript-enum/
+ */
+function enumKeys<O extends object, K extends keyof O = keyof O>(obj: O): K[] {
+    return Object.keys(obj).filter(k => Number.isNaN(+k)) as K[];
+}
+
+export const createQwirkleBar = (bar: Array<Stone>) => {
+    const barQwirkle: Array<ColorShape> = []
+    const firstStone = bar[0]
+    const secondStone = bar?.[1]
+
+    if (bar.length === 1) {
+        for (const shape of enumKeys(Shapes)) barQwirkle.push([firstStone.color, Shapes[shape]])
+        for (const color of enumKeys(Colors)) barQwirkle.push([Colors[color], firstStone.shape])
+    }
+    else {
+        const barUsesShapes = firstStone.shape === secondStone.shape
+        if (barUsesShapes) {
+            for (const color of enumKeys(Colors)) barQwirkle.push([Colors[color], firstStone.shape])    
+        }
+        else {
+            for (const shape of enumKeys(Shapes)) barQwirkle.push([firstStone.color, Shapes[shape]])
+        }
+    }
+    return barQwirkle
+}
+
+export const getIntersection = (...input: Array<Array<unknown>>) => {
+    return input.reduce((a, b) => b.filter(Set.prototype.has, new Set(a)))
+}
