@@ -4,12 +4,12 @@ import { Stone } from './Stone'
 import { ColorShape, Colors, Shapes, Coordinate, Direction, ColorShapeString } from './Types'
 
 export class Predictor {
-    private possibleStones: { [key in `${Colors}${Shapes}`]: Array<Coordinate> }
+    private possibleStones: { [key in `${Colors}${Shapes}`]?: Array<Coordinate> } = {}
     private state: State;
 
     constructor(state: State) {
         this.state = state;
-
+        
         this.startCache()
         this.state.addEventListener('turn-added', (event: Event) => {
             const turn = (event as CustomEvent).detail
@@ -19,6 +19,16 @@ export class Predictor {
 
     startCache () {
         // check for every this.state.borderCoordinates which stones are possible
+        for (const borderCoordinate of this.state.borderCoordinates.values()) {
+            
+            const possibleColorShapesForCoordinate = this.getPossibleColorShapesForCoordinate(borderCoordinate)
+            for (const possibleColorShape of possibleColorShapesForCoordinate) {
+                if (!this.possibleStones[possibleColorShape.join('')]) this.possibleStones[possibleColorShape.join('')] = []
+                this.possibleStones[possibleColorShape.join('')].push(borderCoordinate)
+            }
+        }
+
+        console.log(this.possibleStones)
     }
 
     /**
@@ -34,7 +44,7 @@ export class Predictor {
         // output one or multiple stones that give the best score.
     }
     
-    getPossibleStonesForCoordinate (coordinate: Coordinate) {
+    getPossibleColorShapesForCoordinate (coordinate: Coordinate): Array<ColorShape> {
         const [ x, y ] = coordinate
         const neighbourStones = [
             [x, y - 1],
@@ -49,13 +59,19 @@ export class Predictor {
             return neighbourStone.bar(direction)
         })
 
-        const allPossibleStones = bars.map(bar => {
+        const allPossibleColorShapeStrings = bars.map(bar => {
             const colorShapeBar = bar.map((stone: Stone): ColorShapeString => `${stone.color}${stone.shape}` as ColorShapeString)
             const qwirkleBar = createQwirkleBar(bar).map(colorShape => `${colorShape[0]}${colorShape[1]}` as ColorShapeString)
             return qwirkleBar.filter(colorShapeString => !colorShapeBar.includes(colorShapeString))
         })
-        const possibleStones = getIntersection(...allPossibleStones)
-        return possibleStones
+        const possibleColorShapeStrings = getIntersection(...allPossibleColorShapeStrings)
+
+        const possibleColorShapes = possibleColorShapeStrings.map((possibleColorShapeString: string): ColorShape => {
+            const split = possibleColorShapeString.split('')
+            return [split[0], parseInt(split[1])] as ColorShape
+        })
+
+        return possibleColorShapes
     }
 
     getPossibleTurns () {
