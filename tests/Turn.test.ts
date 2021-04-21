@@ -1,6 +1,6 @@
 import { State } from '../source/State';
 import { Turn } from '../source/Turn';
-import { StoneNotation, Colors, Shapes } from '../source/Types';
+import { Colors, Shapes } from '../source/Types';
 
 import { referenceState1 } from './stateReferences';
 const testState = new State();
@@ -27,8 +27,8 @@ const qwirkleTurn = new Turn([
 ], testState)
 
 test('turn validation', () => {
-  // expect(correctTurn.isValid).toBe(true)
-  // expect(wrongTurn.isValid).toBe(false)
+  expect(correctTurn.isValid).toBe(true)
+  expect(wrongTurn.isValid).toBe(false)
 })
 
 test('qwirklepoints are added', () => {

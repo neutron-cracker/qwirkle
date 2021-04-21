@@ -1,6 +1,5 @@
-import { Shapes, Colors, StoneNotation, Coordinate } from '../source/Types';
+import { Shapes, Colors, Coordinate } from '../source/Types';
 import { State } from '../source/State';
-import { Stone } from '../source/Stone';
 import { sortCoordinates } from '../source/helpers';
 import { referenceState1, referenceState2 } from './stateReferences';
 

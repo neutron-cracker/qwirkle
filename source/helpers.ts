@@ -30,7 +30,7 @@ export function bar (givenStones: Array<Stone>, direction: Direction, initialSto
     return bar;
 }
 
-export function isValidBar (stones: Array<Stone>, isFirstTurn: boolean = false){
+export function isValidBar (stones: Array<Stone>, isFirstTurn: boolean = false) {
     const firstStone = stones[0];
     const oneColor = stones.every(stone => stone.color === firstStone.color);
     const oneShape = stones.every(stone => stone.shape === firstStone.shape);
@@ -54,7 +54,7 @@ export function isBar (stones: Array<Stone>) {
 
     const direction = getDirectionOfBar(stones)
     const continuousBar = bar(stones, direction).length === stones.length
-    // console.log(isOneBar, continuousBar);
+
     return isOneBar && continuousBar
 }
 
@@ -79,6 +79,10 @@ export function onlyUnique(value, index, self) {
     return self.indexOf(value) === index;
 }
 
+/**
+ * Discovers all the bars in the given stones.
+ * With this you can easily iterate over all bars in the state.
+ */
 export function barIterator (barStones: Array<Stone> = []) {
     const bars = []
 
@@ -105,6 +109,10 @@ function enumKeys<O extends object, K extends keyof O = keyof O>(obj: O): K[] {
     return Object.keys(obj).filter(k => Number.isNaN(+k)) as K[];
 }
 
+/**
+ * A Qwirkle Bar is a concept we use to determine what possible stones may be used on a specific coordinate.
+ * When a bar is only one stone long, it contains all the stones for the different colors and the different shape.
+ */
 export const createQwirkleBar = (bar: Array<Stone>) => {
     const barQwirkle: Array<ColorShape> = []
     const firstStone = bar[0]
@@ -126,6 +134,10 @@ export const createQwirkleBar = (bar: Array<Stone>) => {
     return barQwirkle
 }
 
+/**
+ * Given multiple arrays as seperate arguments to the funtion,
+ * gives back all the items that exist in all the input arrays.
+ */
 export const getIntersection = (...input: Array<Array<unknown>>) => {
     return input.reduce((a, b) => b.filter(Set.prototype.has, new Set(a)))
 }

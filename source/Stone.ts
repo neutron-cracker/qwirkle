@@ -1,13 +1,16 @@
 import { StoneNotation, Colors, Shapes, Direction, Coordinate } from './Types';
 import { State } from './State';
 import { bar } from './helpers'
+
 export class Stone {
+
   public x: number;
   public y: number;
   public color: Colors;
   public shape: Shapes;
   private player: number | undefined;
   public state: State;
+
   constructor(stoneNotation: StoneNotation, state: State = null) {
     [this.x, this.y, this.color, this.shape, this.player] = stoneNotation;
     this.state = state ?? new State();
@@ -32,6 +35,9 @@ export class Stone {
     return this.neighbours.map((neighbour) => [neighbour.x, neighbour.y])
   }
 
+  /**
+   * A bar is a column or a row of stones.
+   */
   public bar(direction: Direction, turnStones: Array<Stone> = []) {
     return bar(this.state.stones, direction, this, turnStones)
   }

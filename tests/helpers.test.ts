@@ -1,5 +1,5 @@
 import { sameItems, isBar, createQwirkleBar, getIntersection } from "../source/helpers";
-import { Colors, Shapes, StoneNotation } from '../source/Types'
+import { Colors, Shapes } from '../source/Types'
 import { Stone } from '../source/Stone'
 
 test('sameItems while giving arrays with different lengths', () => {

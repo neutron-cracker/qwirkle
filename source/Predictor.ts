@@ -3,6 +3,11 @@ import { State } from './State'
 import { Stone } from './Stone'
 import { ColorShape, Colors, Shapes, Coordinate, Direction, ColorShapeString } from './Types'
 
+/**
+ * The predicator is used for determining the best possible scores given a certain state and a certain hand of stones.
+ * It does this with a pushed based system.
+ * The data is updated when a turn is done. This way we can make predictions very fast.
+ */
 export class Predictor {
     private possibleStones: { [key in `${Colors}${Shapes}`]?: Array<Coordinate> } = {}
     private state: State;
@@ -18,9 +23,7 @@ export class Predictor {
     }
 
     startCache () {
-        // check for every this.state.borderCoordinates which stones are possible
         for (const borderCoordinate of this.state.borderCoordinates.values()) {
-            
             const possibleColorShapesForCoordinate = this.getPossibleColorShapesForCoordinate(borderCoordinate)
             for (const possibleColorShape of possibleColorShapesForCoordinate) {
                 if (!this.possibleStones[possibleColorShape.join('')]) this.possibleStones[possibleColorShape.join('')] = []
@@ -35,7 +38,6 @@ export class Predictor {
      * Stones may be empty as the player can change one or multiple stone in a turn instead of playing stones.
      */
     updateCache (stones: Array<Stone> = []) {
-
         // Determine which coordinates should be recalculated.
         // calculate possible ColorShapes for a specific coordinate.
     }

@@ -1,7 +1,9 @@
 import { Turn } from './Turn';
 import { StoneNotation, Coordinate, Direction } from './Types';
 import { Stone } from './Stone';
+
 export class State extends EventTarget {
+
   public turns: Array<Turn> = [];
   public stonesCoordinates: Map<string, Coordinate> = new Map()
   public borderCoordinates: Map<string, Coordinate> = new Map()
@@ -41,8 +43,5 @@ export class State extends EventTarget {
         }
       }
     }
-
   }
-
-
 }

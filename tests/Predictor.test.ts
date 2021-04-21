@@ -1,8 +1,6 @@
 import {  Predictor } from '../source/Predictor'
 import { State } from '../source/State';
-import { ColorShape, Colors, Shapes, Coordinate } from '../source/Types';
-import { referenceState1, referenceState2 } from './stateReferences';
-import { sortCoordinates } from '../source/helpers'
+import { referenceState1 } from './stateReferences';
 
 const testState = new State()
 testState.setInitial(referenceState1)
