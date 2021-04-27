@@ -1,5 +1,5 @@
 import { Stone } from "./Stone";
-import { Direction, Coordinate, Colors, Shapes, ColorShape } from "./Types"
+import { Direction, Coordinate, Colors, Shapes, ColorShape, StoneNotation } from "./Types"
 
 /**
  * This function is used in two contexts, one where the stones are already a possible bar, and one where the stones is the whole state.
@@ -85,13 +85,14 @@ export function onlyUnique(value, index, self) {
  */
 export function barIterator (barStones: Array<Stone> = []) {
     const bars = []
-
     const direction = getDirectionOfBar(barStones)
     const firstStone = barStones[0]
     const oppositeDirection = direction === Direction.Horizontal ? Direction.Vertical : Direction.Horizontal;
     bars.push(firstStone.bar(direction, barStones))
-
-    barStones.every(stone => bars.push(stone.bar(oppositeDirection, barStones)))
+    barStones.every(stone => {
+        const possibleBar = stone.bar(oppositeDirection, barStones)
+        if (possibleBar.length > 1) bars.push(possibleBar)
+    })
 
     return bars
 }
