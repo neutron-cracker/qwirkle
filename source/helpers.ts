@@ -1,6 +1,6 @@
 import { Stone } from "./Stone";
 import { State } from "./State";
-import { Direction, Coordinate, Colors, Shapes, ColorShape, StoneNotation } from "./Types"
+import { Direction, Coordinate, Colors, Shapes, ColorShape, ColorShapeString } from "./Types"
 
 /**
  * This function is used in two contexts, one where the stones are already a possible bar, and one where the stones is the whole state.
@@ -167,4 +167,39 @@ export const filledBar = (state: State, stones: Array<Stone>) => {
         }
     }
     return filledBar
+}
+
+export const getPossibleColorShapesForCoordinate = (stateStones: Array<Stone>, coordinate: Coordinate, stonesCoordinates: Map<string, Coordinate> = null): Array<ColorShape> => {
+
+    if (stonesCoordinates === null) {
+        stonesCoordinates = new Map(stateStones.map(stone => [stone.coordinates(true), stone.coordinates()]))
+    }
+
+    const [ x, y ] = coordinate
+    const neighbourStones = [
+        [x, y - 1],
+        [x + 1, y],
+        [x, y + 1],
+        [x - 1, y]
+    ].filter((coordinate: Coordinate) => stonesCoordinates.has(coordinate.join(',')))
+    .map(coordinate => stateStones.find((stone: Stone) => stone.coordinates(true) === coordinate.join(',')))
+    
+    const bars = neighbourStones.map(neighbourStone => {
+        const direction = neighbourStone.x === coordinate[0] ? Direction.Vertical : Direction.Horizontal
+        return neighbourStone.bar(direction)
+    })
+
+    const allPossibleColorShapeStrings = bars.map(bar => {
+        const colorShapeBar = bar.map((stone: Stone): ColorShapeString => `${stone.color}${stone.shape}` as ColorShapeString)
+        const qwirkleBar = createQwirkleBar(bar).map(colorShape => `${colorShape[0]}${colorShape[1]}` as ColorShapeString)
+        return qwirkleBar.filter(colorShapeString => !colorShapeBar.includes(colorShapeString))
+    })
+    const possibleColorShapeStrings = getIntersection(...allPossibleColorShapeStrings)
+
+    const possibleColorShapes = possibleColorShapeStrings.map((possibleColorShapeString: string): ColorShape => {
+        const split = possibleColorShapeString.split('')
+        return [split[0], parseInt(split[1])] as ColorShape
+    })
+
+    return possibleColorShapes
 }

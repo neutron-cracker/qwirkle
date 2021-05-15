@@ -42,4 +42,6 @@ export class Turn {
     return points
   }
 
+  clone () {}
+
 }

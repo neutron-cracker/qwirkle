@@ -1,6 +1,7 @@
-import { createQwirkleBar, getIntersection, barIterator, getDirectionOfBar} from './helpers';
+import { createQwirkleBar, getIntersection, barIterator, getDirectionOfBar, getPossibleColorShapesForCoordinate} from './helpers';
 import { State } from './State'
 import { Stone } from './Stone'
+import { Turn } from './Turn';
 import { ColorShape, Colors, Shapes, Coordinate, Direction, ColorShapeString, StoneNotation } from './Types'
 
 /**
@@ -24,7 +25,7 @@ export class Predictor {
 
     startCache () {
         for (const borderCoordinate of this.state.borderCoordinates.values()) {
-            const possibleColorShapesForCoordinate = this.getPossibleColorShapesForCoordinate(borderCoordinate)
+            const possibleColorShapesForCoordinate = getPossibleColorShapesForCoordinate(this.state.stones, borderCoordinate, this.state.stonesCoordinates)
             for (const possibleColorShape of possibleColorShapesForCoordinate) {
                 if (!this.possibleStones[possibleColorShape.join('')]) this.possibleStones[possibleColorShape.join('')] = []
                 this.possibleStones[possibleColorShape.join('')].push(borderCoordinate)
@@ -86,7 +87,7 @@ export class Predictor {
         for (const coordinate of coordinatesToBeChanged) {
             // get new colorShape for coordinate
             // go trough every item color shape and check if coordinate is there. If one of new color shape, add/leave it, else remove coordinate
-            const possibleColorShapeStrings = this.getPossibleColorShapesForCoordinate(coordinate).map(colorShape => `${colorShape[0]}${colorShape[1]}` as ColorShapeString)
+            const possibleColorShapeStrings = getPossibleColorShapesForCoordinate(this.state.stones, coordinate, this.state.stonesCoordinates).map(colorShape => `${colorShape[0]}${colorShape[1]}` as ColorShapeString)
             for (const colorShapeKey in this.possibleStones) {
                
                 const coordinateInEntry = this.possibleStones[colorShapeKey].find((innerCoordinate: Coordinate) => innerCoordinate.toString() === coordinate.toString())
@@ -108,38 +109,28 @@ export class Predictor {
         // required items: state, possibleStones, unplayedStones
     }
     
-    getPossibleColorShapesForCoordinate (coordinate: Coordinate): Array<ColorShape> {
-        const [ x, y ] = coordinate
-        const neighbourStones = [
-            [x, y - 1],
-            [x + 1, y],
-            [x, y + 1],
-            [x - 1, y]
-        ].filter((coordinate: Coordinate) => this.state.stonesCoordinates.has(coordinate.join(',')))
-        .map(coordinate => this.state.stones.find((stone: Stone) => stone.coordinates(true) === coordinate.join(',')))
-        
-        const bars = neighbourStones.map(neighbourStone => {
-            const direction = neighbourStone.x === coordinate[0] ? Direction.Vertical : Direction.Horizontal
-            return neighbourStone.bar(direction)
-        })
 
-        const allPossibleColorShapeStrings = bars.map(bar => {
-            const colorShapeBar = bar.map((stone: Stone): ColorShapeString => `${stone.color}${stone.shape}` as ColorShapeString)
-            const qwirkleBar = createQwirkleBar(bar).map(colorShape => `${colorShape[0]}${colorShape[1]}` as ColorShapeString)
-            return qwirkleBar.filter(colorShapeString => !colorShapeBar.includes(colorShapeString))
-        })
-        const possibleColorShapeStrings = getIntersection(...allPossibleColorShapeStrings)
+    getPossibleTurns (colorShapes: Array<ColorShape>) {
+        const possibleTurns: Array<Turn> = []
 
-        const possibleColorShapes = possibleColorShapeStrings.map((possibleColorShapeString: string): ColorShape => {
-            const split = possibleColorShapeString.split('')
-            return [split[0], parseInt(split[1])] as ColorShape
-        })
 
-        return possibleColorShapes
-    }
+        for (const colorShape of colorShapes) {
+            const possibleCoordinates = this.possibleStones[colorShape.join('')]
 
-    getPossibleTurns () {
+            const processCoordinate = (coordinate: Coordinate, filteredColorShapes: Array<ColorShape>) => {
+                const colorShapes = getPossibleColorShapesForCoordinate(this.state.stones, coordinate)
+                //get possiblecolorshapes for Coordinate
+                //
+            }
 
+            for (const possibleCoordinate of possibleCoordinates) {
+                const otherColorShapes = colorShapes.filter(innerColorShape => innerColorShape !== colorShape)
+                processCoordinate(possibleCoordinate, otherColorShapes)
+            }
+
+            //coordinate -> colorshapes -> intersection hand -> pop from trail > recurse!
+        }
+        return possibleTurns
     }
 
     
