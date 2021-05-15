@@ -1,7 +1,7 @@
 import { Stone } from './Stone';
 import { State } from './State';
 import { StoneNotation } from './Types';
-import { isValidBar, isBar, onlyUnique, barIterator } from './helpers';
+import { isValidBar, isBar, onlyUnique, barIterator, filledBar } from './helpers';
 
 export class Turn {
   public stones: Array<Stone> = [];
@@ -15,7 +15,8 @@ export class Turn {
   public get isValid() {
     if (!this.stones.length) return true
 
-    const turnStonesAreValid = isBar(this.stones)
+    const allStonesOfBar = filledBar(this.state, this.stones)
+    const turnStonesAreValid = isBar(allStonesOfBar)
 
     const allUniqueStones = this.stones.length === this.stones.filter(onlyUnique).length
   

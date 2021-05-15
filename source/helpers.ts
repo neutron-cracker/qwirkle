@@ -1,4 +1,5 @@
 import { Stone } from "./Stone";
+import { State } from "./State";
 import { Direction, Coordinate, Colors, Shapes, ColorShape, StoneNotation } from "./Types"
 
 /**
@@ -141,4 +142,29 @@ export const createQwirkleBar = (bar: Array<Stone>) => {
  */
 export const getIntersection = (...input: Array<Array<unknown>>) => {
     return input.reduce((a, b) => b.filter(Set.prototype.has, new Set(a)))
+}
+
+export const filledBar = (state: State, stones: Array<Stone>) => {
+    if (stones.length === 1) return stones
+
+    const sortedCoordinates = stones
+    .map(stone => stone.coordinates())
+    .sort(sortCoordinates)
+
+    const filledBar = []
+    const direction = sortedCoordinates[0][0] === sortedCoordinates[1][0] ? Direction.Vertical : Direction.Horizontal
+    const oppositeDirection = direction === Direction.Horizontal ? Direction.Vertical : Direction.Horizontal;
+    const axis = direction === Direction.Horizontal ? 0 : 1
+    for (let axisValue = sortedCoordinates[0][axis]; axisValue <= sortedCoordinates[sortCoordinates.length - 1][axis]; axisValue++) {
+        const stoneFoundInGivenStones = stones.find(stone => stone[direction] === axisValue)
+        if (stoneFoundInGivenStones) {
+            filledBar.push(stoneFoundInGivenStones)
+        } else {
+            const stoneFoundInState = state.stones.find(stone => stone[direction] === axisValue && stone[oppositeDirection] === stones[0][oppositeDirection])
+            if (stoneFoundInState) {
+                filledBar.push(stoneFoundInState)
+            }
+        }
+    }
+    return filledBar
 }
