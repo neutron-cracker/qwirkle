@@ -107,32 +107,67 @@ export class Predictor {
     getBestPossibleTurns(unplayedStones: Array<ColorShape>){
         // output one or multiple stones that give the best score.
         // required items: state, possibleStones, unplayedStones
+
     }
     
 
     getPossibleTurns (colorShapes: Array<ColorShape>) {
         const possibleTurns: Array<Turn> = []
-
-
-        for (const colorShape of colorShapes) {
-            const possibleCoordinates = this.possibleStones[colorShape.join('')]
-
-            const processCoordinate = (coordinate: Coordinate, filteredColorShapes: Array<ColorShape>) => {
-                const colorShapes = getPossibleColorShapesForCoordinate(this.state.stones, coordinate)
-                //get possiblecolorshapes for Coordinate
-                //
-            }
-
-            for (const possibleCoordinate of possibleCoordinates) {
-                const otherColorShapes = colorShapes.filter(innerColorShape => innerColorShape !== colorShape)
-                processCoordinate(possibleCoordinate, otherColorShapes)
-            }
-
-            //coordinate -> colorshapes -> intersection hand -> pop from trail > recurse!
+        for (const colorShape of colorShapes) {           
+            this.processColorshape(colorShape, colorShapes.filter(innerColorShape => innerColorShape.toString() !== colorShape.toString()), possibleTurns)
         }
         return possibleTurns
     }
-
     
+    processColorshape (colorShape: ColorShape, otherColorShapes: Array<ColorShape>, possibleTurns: Array<Turn>, buildupTurn: Turn = null) {
+        const possibleCoordinates: Array<Coordinate> = [];
+        
+        if (!buildupTurn) {
+            possibleCoordinates.push(...this.possibleStones[colorShape.join('')])
+        } else if (buildupTurn.stones.length === 1) {
+            possibleCoordinates.push() //TODO
+        } else if (buildupTurn.stones.length > 1) {
+            possibleCoordinates.push() //TODO
+        }
+
+        if (possibleCoordinates.length == 0)    {
+            possibleTurns.push(buildupTurn)
+            return
+        }
+
+        for (const possibleCoordinate of possibleCoordinates) {
+            // TODO we might optimize here for same shape or color.
+            for (const otherColorShape of otherColorShapes) {
+
+                let stoneNotation = [possibleCoordinate[0], possibleCoordinate[1], otherColorShape[0], otherColorShape[1]] as StoneNotation
+                let newBuildupTurn
+                if (!buildupTurn) {
+                    newBuildupTurn = new Turn([stoneNotation], this.state)
+                } else {
+                    newBuildupTurn = buildupTurn.clone()
+                    newBuildupTurn.stones.push(new Stone(stoneNotation, this.state))
+                }
+
+                const filteredOtherColorShapes = otherColorShapes.filter(innerColorShape => innerColorShape.toString() !== otherColorShape.toString());
+
+                this.processColorshape(otherColorShape, filteredOtherColorShapes, possibleTurns, newBuildupTurn);           
+            }
+        }
+    }
+    
+    
+    /**
+     * for every possible coordinates of hand ColorShape
+     *  
+     */
+
+    /**
+     * for every colorshape of ColorShapes
+     *      get possible coordinates for colorshape
+     *          for every possible coordinate of coordinates
+     *              get possible colorshapes
+     *              perform function again with colorshapes
+     * 
+     */             
 
 }

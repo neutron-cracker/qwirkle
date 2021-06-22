@@ -60,5 +60,9 @@ export class Stone {
   toString () {
     return `${this.x}-${this.y}-${this.color}-${this.shape}`
   }
+  
+  toNotation(): StoneNotation {
+    return [this.x, this.y, this.color, this.shape]
+  }
 }
 

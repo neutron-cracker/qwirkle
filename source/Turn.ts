@@ -42,6 +42,8 @@ export class Turn {
     return points
   }
 
-  clone () {}
+  clone () {
+    return new Turn(this.stones.map(stone => stone.toNotation()), this.state)
+  }
 
 }
