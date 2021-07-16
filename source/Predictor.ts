@@ -1,4 +1,4 @@
-import { createQwirkleBar, getIntersection, barIterator, getDirectionOfBar, getPossibleColorShapesForCoordinate} from './helpers';
+import { createQwirkleBar, getIntersection, barIterator, getDirectionOfBar, getPossibleColorShapesForCoordinate, sortCoordinates} from './helpers';
 import { State } from './State'
 import { Stone } from './Stone'
 import { Turn } from './Turn';
@@ -121,22 +121,36 @@ export class Predictor {
     
     processColorshape (colorShape: ColorShape, otherColorShapes: Array<ColorShape>, possibleTurns: Array<Turn>, buildupTurn: Turn = null) {
         const possibleCoordinates: Array<Coordinate> = [];
-        
+
         if (!buildupTurn) {
             possibleCoordinates.push(...this.possibleStones[colorShape.join('')])
         } else if (buildupTurn.stones.length === 1) {
-            possibleCoordinates.push() //TODO
+            // TODO Maybe add better and especially earlier validation.
+            const firstStone = buildupTurn.stones[0]
+            const allNeighbourCoordinates = firstStone.allNeighbourCoordinates
+            const emptyNeighbourCoordinates = allNeighbourCoordinates.filter(coordinate => !this.state.stonesCoordinates.has(coordinate.join(',')))
+            possibleCoordinates.push(...emptyNeighbourCoordinates)
         } else if (buildupTurn.stones.length > 1) {
-            possibleCoordinates.push() //TODO
+            const direction = getDirectionOfBar(buildupTurn.stones)
+            const coordinates = buildupTurn.stones.map(stone => stone.coordinates()).sort(sortCoordinates)
+            const firstCoordinate = coordinates[0]
+            const lastCoordinate = coordinates[coordinates.length - 1]
+            if (direction === Direction.Horizontal) {
+                possibleCoordinates.push([firstCoordinate[0] - 1,  firstCoordinate[1]], [lastCoordinate[0] + 1 , lastCoordinate[1]])
+            }
+            else {
+                possibleCoordinates.push([firstCoordinate[0],  firstCoordinate[1] - 1], [lastCoordinate[0], lastCoordinate[1] + 1])
+            }
         }
 
-        if (possibleCoordinates.length == 0)    {
+        if (possibleCoordinates.length === 0) {
             possibleTurns.push(buildupTurn)
             return
         }
 
         for (const possibleCoordinate of possibleCoordinates) {
             // TODO we might optimize here for same shape or color.
+                
             for (const otherColorShape of otherColorShapes) {
 
                 let stoneNotation = [possibleCoordinate[0], possibleCoordinate[1], otherColorShape[0], otherColorShape[1]] as StoneNotation
@@ -148,26 +162,21 @@ export class Predictor {
                     newBuildupTurn.stones.push(new Stone(stoneNotation, this.state))
                 }
 
+                // early skip of this iteration if the the proposed turn is not valid.
+                if (!newBuildupTurn.isValid) {
+                    continue
+                };
+
                 const filteredOtherColorShapes = otherColorShapes.filter(innerColorShape => innerColorShape.toString() !== otherColorShape.toString());
 
                 this.processColorshape(otherColorShape, filteredOtherColorShapes, possibleTurns, newBuildupTurn);           
             }
         }
+
+        // if (otherColorShapes.length === 0) {
+        //     possibleTurns.push(buildupTurn)
+        //     return
+        // }
+
     }
-    
-    
-    /**
-     * for every possible coordinates of hand ColorShape
-     *  
-     */
-
-    /**
-     * for every colorshape of ColorShapes
-     *      get possible coordinates for colorshape
-     *          for every possible coordinate of coordinates
-     *              get possible colorshapes
-     *              perform function again with colorshapes
-     * 
-     */             
-
 }

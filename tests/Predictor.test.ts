@@ -68,5 +68,6 @@ test('getPossibleTurns further iteration', () => {
     [Colors.Blue, Shapes.Circle],
   ])
 
+  console.log(turns)
 
 })
