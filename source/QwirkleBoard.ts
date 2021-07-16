@@ -22,7 +22,6 @@ const shapeMap = {
   6: (x, y, color) => svg`<circle fill=${colorMap[color]} r=${factor / 2} cx=${x + .5} cy=${y + .5}>`,
 }
 
-
 export class QwirkleBoard extends HTMLElement {
 
   private state: Array<any> 
