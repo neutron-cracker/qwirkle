@@ -119,6 +119,11 @@ export class Predictor {
         return possibleTurns
     }
     
+    /**
+     * We think we are missing the turn:
+     * x: -1, y: 3, color: b, shape: 2
+     * x: -1, y: 4, color: b, shape: 1
+     */
     processColorshape (colorShape: ColorShape, otherColorShapes: Array<ColorShape>, possibleTurns: Array<Turn>, buildupTurn: Turn = null) {
         const possibleCoordinates: Array<Coordinate> = [];
 
@@ -150,33 +155,31 @@ export class Predictor {
 
         for (const possibleCoordinate of possibleCoordinates) {
             // TODO we might optimize here for same shape or color.
-                
+            let stoneNotation = [possibleCoordinate[0], possibleCoordinate[1], colorShape[0], colorShape[1]] as StoneNotation
+            let newBuildupTurn
+            if (!buildupTurn) {
+                newBuildupTurn = new Turn([stoneNotation], this.state)
+            } else {
+                newBuildupTurn = buildupTurn.clone()
+                newBuildupTurn.stones.push(new Stone(stoneNotation, this.state))
+            }
+
+            // early skip of this iteration if the the proposed turn is not valid.
+            if (!newBuildupTurn.isValid) {
+                continue
+            } 
+
+            if (otherColorShapes.length === 0) {
+                possibleTurns.push(newBuildupTurn)
+                return
+            }
+
             for (const otherColorShape of otherColorShapes) {
-
-                let stoneNotation = [possibleCoordinate[0], possibleCoordinate[1], otherColorShape[0], otherColorShape[1]] as StoneNotation
-                let newBuildupTurn
-                if (!buildupTurn) {
-                    newBuildupTurn = new Turn([stoneNotation], this.state)
-                } else {
-                    newBuildupTurn = buildupTurn.clone()
-                    newBuildupTurn.stones.push(new Stone(stoneNotation, this.state))
-                }
-
-                // early skip of this iteration if the the proposed turn is not valid.
-                if (!newBuildupTurn.isValid) {
-                    continue
-                };
-
                 const filteredOtherColorShapes = otherColorShapes.filter(innerColorShape => innerColorShape.toString() !== otherColorShape.toString());
-
                 this.processColorshape(otherColorShape, filteredOtherColorShapes, possibleTurns, newBuildupTurn);           
             }
         }
 
-        // if (otherColorShapes.length === 0) {
-        //     possibleTurns.push(buildupTurn)
-        //     return
-        // }
 
     }
 }
