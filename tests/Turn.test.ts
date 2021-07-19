@@ -26,6 +26,11 @@ const wrongTurn = new Turn([
   [2, 1, Colors.Red, Shapes.Square, 1]
 ], testState)
 
+const wrongTurn2 = new Turn([
+  [-1, 3, Colors.Blue, Shapes.Circle],
+  [-1, 2, Colors.Blue, Shapes.Square,]
+], testState)
+
 const qwirkleTurn = new Turn([
   [-2, -4, Colors.Green, Shapes.Quadrogram, 1],
   [-2, -5, Colors.Green, Shapes.Square, 1]
@@ -34,6 +39,7 @@ const qwirkleTurn = new Turn([
 test('turn validation', () => {
   expect(correctTurn.isValid).toBe(true)
   expect(wrongTurn.isValid).toBe(false)
+  expect(wrongTurn2.isValid).toBe(false)
 })
 
 test('turn validation with correct bar with gaps', () => {
