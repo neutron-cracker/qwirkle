@@ -119,11 +119,6 @@ export class Predictor {
         return possibleTurns
     }
     
-    /**
-     * We think we are missing the turn:
-     * x: -1, y: 3, color: b, shape: 2
-     * x: -1, y: 4, color: b, shape: 1
-     */
     processColorshape (colorShape: ColorShape, otherColorShapes: Array<ColorShape>, possibleTurns: Array<Turn>, buildupTurn: Turn = null) {
         const possibleCoordinates: Array<Coordinate> = [];
 
@@ -148,15 +143,15 @@ export class Predictor {
             }
         }
 
-        if (possibleCoordinates.length === 0) {
-            possibleTurns.push(buildupTurn)
+        if (possibleCoordinates.length === 0 && buildupTurn !== null) { 
+            this.pushBuildupTurnToPossibleTurns(possibleTurns, buildupTurn);
             return
         }
 
         for (const possibleCoordinate of possibleCoordinates) {
             // TODO we might optimize here for same shape or color.
             let stoneNotation = [possibleCoordinate[0], possibleCoordinate[1], colorShape[0], colorShape[1]] as StoneNotation
-            let newBuildupTurn
+            let newBuildupTurn: Turn
             if (!buildupTurn) {
                 newBuildupTurn = new Turn([stoneNotation], this.state)
             } else {
@@ -170,8 +165,8 @@ export class Predictor {
             } 
 
             if (otherColorShapes.length === 0) {
-                possibleTurns.push(newBuildupTurn)
-                return
+                this.pushBuildupTurnToPossibleTurns(possibleTurns, newBuildupTurn);
+                continue
             }
 
             for (const otherColorShape of otherColorShapes) {
@@ -179,7 +174,13 @@ export class Predictor {
                 this.processColorshape(otherColorShape, filteredOtherColorShapes, possibleTurns, newBuildupTurn);           
             }
         }
+    }
 
-
+    //TODO: We might optimze by creating a map with possibleTurns with a Turn.toString value in the key.
+    pushBuildupTurnToPossibleTurns(possibleTurns: Array<Turn>, buildupTurn: Turn) {
+        const buildupTurnDoesNotExistYet = possibleTurns.every(possibleTurn => possibleTurn.toString() !== buildupTurn.toString());
+        if (buildupTurnDoesNotExistYet) {
+            possibleTurns.push(buildupTurn);
+        }
     }
 }

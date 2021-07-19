@@ -1,7 +1,7 @@
 import { Stone } from './Stone';
 import { State } from './State';
 import { StoneNotation } from './Types';
-import { isValidBar, isBar, onlyUnique, barIterator, filledBar } from './helpers';
+import { isValidBar, isBar, onlyUnique, barIterator, filledBar, sortCoordinates, sortStones} from './helpers';
 
 export class Turn {
   public stones: Array<Stone> = [];
@@ -44,6 +44,15 @@ export class Turn {
 
   clone () {
     return new Turn(this.stones.map(stone => stone.toNotation()), this.state)
+  }
+
+  /**
+   * This function creates a string representation of this turn based on the values from the 'stones' property.
+   * It does not incluse the state.
+   */
+  toString() {
+    const sortedStones = this.stones.sort(sortStones)
+    return sortedStones.map(stone => stone.toString()).join('')
   }
 
 }

@@ -102,7 +102,30 @@ export function barIterator (barStones: Array<Stone> = []) {
  * We picked 1000 because there are no more than thousand stones in the game.
  * It is prefix.
  */
-export const sortCoordinates = (a: Coordinate, b: Coordinate) => ((a[0] * 1000) + a[1]) - ((b[0] * 1000) + b[1])
+export const sortCoordinates = (a: Coordinate, b: Coordinate) => ((a[0] * 1000) + a[1]) - ((b[0] * 1000) + b[1]);
+
+export const sortStones = (a: Stone, b: Stone) => {
+    const sortCoordinateResult = sortCoordinates(a.coordinates(false), b.coordinates(false));
+    if (sortCoordinateResult != 0) return sortCoordinateResult
+
+    const sortColorResult = sortColors(a.color, b.color)
+    if (sortColorResult != 0) return sortColorResult
+
+    return a.shape - b.shape
+}
+
+export const sortColors = (a: Colors, b: Colors) => {
+    const colorIntMap = new Map<Colors, number>([
+        [Colors.Blue, 1],
+        [Colors.Green, 2],
+        [Colors.Orange, 3],
+        [Colors.Purple, 4],
+        [Colors.Red, 5],
+        [Colors.Yellow, 6]
+    ]);
+    return(colorIntMap[a] - colorIntMap[b])
+}
+
 
 /**
  * @see https://www.petermorlion.com/iterating-a-typescript-enum/
