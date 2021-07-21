@@ -52,6 +52,8 @@ export class QwirkleBoard extends HTMLElement {
   private smallestY = 0
   private biggestX = 0
   private biggestY = 0
+  private horizontalStoneCount = 0
+  private verticalStoneCount = 0
 
 
   connectedCallback () {
@@ -63,19 +65,28 @@ export class QwirkleBoard extends HTMLElement {
       if (y < this.smallestY) this.smallestY = y
       if (y > this.biggestY) this.biggestY = y
     }
-
+    this.horizontalStoneCount = this.biggestX - this.smallestX + 1
+    this.verticalStoneCount = this.biggestY - this.smallestY + 1
     this.draw()
   }
 
   draw () {
-    render(this, svg`
-      <svg style="transform: scale(1, -1)" viewBox=${`${this.smallestX} ${this.smallestY} ${this.biggestX - this.smallestX + 1} ${this.biggestY - this.smallestY + 1}`} xmlns="http://www.w3.org/2000/svg">
-        ${this.state.map(([x, y, color, shape]) => svg`
-          <rect fill="rgb(44, 46, 53)" x=${x + stoneFactor} y=${y + stoneFactor} width=${1 - stoneFactor * 2} height=${1 - stoneFactor * 2} />
-          ${shapeMap[shape](x, y, color)}
-        `)}
-      </svg>
-    `)
+    render(this, html`
+    <style>
+      :root {--stoneWidth: 40px;}
+      qwirkle-board {
+        transform: scale(1, -1);
+        display: block;
+      }
+    </style>
+    ${ svg`
+    <svg style=${`width: calc(var(--stoneWidth) * ${this.horizontalStoneCount})`} viewBox=${`${this.smallestX} ${this.smallestY} ${this.horizontalStoneCount} ${this.verticalStoneCount}`} xmlns="http://www.w3.org/2000/svg">
+      ${this.state.map(([x, y, color, shape]) => svg`
+        <rect fill="rgb(44, 46, 53)" x=${x + stoneFactor} y=${y + stoneFactor} width=${1 - stoneFactor * 2} height=${1 - stoneFactor * 2} />
+        ${shapeMap[shape](x, y, color)}
+      `)}
+    </svg>
+  `}`)
   }
 
 }
