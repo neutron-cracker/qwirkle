@@ -12,15 +12,38 @@ const colorMap = {
 }
 
 const factor = .7
+const flowerFactor = .33
+const innerQuadrogramFactor = .4
+const outerQuadrogramFactor = .1
+const diamondFactor = .15
+const innerOctagramFactor = innerQuadrogramFactor
+const outerOctagramFactor = outerQuadrogramFactor
 
 const shapeMap = {
-  1: (x, y, color) => svg`<circle fill=${colorMap[color]} r=${factor / 1.9} cx=${x + .5} cy=${y + .5}>`,
+  1: (x, y, color) => svg`<circle fill=${colorMap[color]} r=${factor / 1.9} cx=${x + .5} cy=${y + .5} />`,
   2: (x, y, color) => svg`<rect fill=${colorMap[color]} x=${x + 0.5 - factor / 2} y=${y + 0.5 - factor / 2} width=${factor} height=${factor} />`,
-  3: (x, y, color) => svg`<circle fill=${colorMap[color]} r=${factor / 2} cx=${x + .5} cy=${y + .5}>`,
-  4: (x, y, color) => svg`<circle fill=${colorMap[color]} r=${factor / 2} cx=${x + .5} cy=${y + .5}>`,
-  5: (x, y, color) => svg`<circle fill=${colorMap[color]} r=${factor / 2} cx=${x + .5} cy=${y + .5}>`,
-  6: (x, y, color) => svg`<circle fill=${colorMap[color]} r=${factor / 2} cx=${x + .5} cy=${y + .5}>`,
-}
+  3: (x, y, color) => svg`
+    <circle fill=${colorMap[color]} r=${factor / 4} cx=${x + 1 -flowerFactor} cy=${y + .5} />
+    <circle fill=${colorMap[color]} r=${factor / 4} cx=${x + flowerFactor} cy=${y + .5} />
+    <circle fill=${colorMap[color]} r=${factor / 4} cx=${x + .5} cy=${y + 1 -flowerFactor} />
+    <circle fill=${colorMap[color]} r=${factor / 4} cx=${x + .5} cy=${y + flowerFactor} />`,
+  4: (x, y, color, rotate = false) => svg`<polygon fill=${colorMap[color]} points=${`
+    ${x + .5},${y + outerQuadrogramFactor} 
+    ${x + 1 - innerQuadrogramFactor},${y + innerQuadrogramFactor} 
+    ${x + 1 - outerQuadrogramFactor},${y + .5} 
+    ${x + 1 - innerQuadrogramFactor},${y + 1 - innerQuadrogramFactor} 
+    ${x + .5},${y + 1 - outerQuadrogramFactor} 
+    ${x + innerQuadrogramFactor},${y + 1 - innerQuadrogramFactor} 
+    ${x + outerQuadrogramFactor},${y + .5}
+    ${x + innerQuadrogramFactor},${y + innerQuadrogramFactor} 
+  `} transform=${rotate ? `rotate(45 ${x + .5} ${y + .5})`: null} />`,
+  5: (x, y, color) => svg`<polygon fill=${colorMap[color]} points=${`
+    ${x + .5},${y + 1 - diamondFactor} 
+    ${x + diamondFactor},${y + .5} 
+    ${x + .5},${y + diamondFactor} 
+    ${x + 1 - diamondFactor},${y + .5}
+  `} />`,
+  6: (x, y, color) => svg`${shapeMap[4](x, y, color)}${shapeMap[4](x, y, color, true)}`,}
 
 export class QwirkleBoard extends HTMLElement {
 
@@ -33,7 +56,7 @@ export class QwirkleBoard extends HTMLElement {
 
   draw () {
     render(this, svg`
-      <svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="-3 -3 10 10" xmlns="http://www.w3.org/2000/svg">
         ${this.state.map(([x, y, color, shape]) => svg`
           <rect x=${x} y=${y} width="1" height="1" />
           ${shapeMap[shape](x, y, color)}
