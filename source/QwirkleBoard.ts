@@ -1,6 +1,6 @@
 /** @ts-ignore */
 import { svg, html, render } from 'uhtml/async'
-import { Colors } from './Types'
+import { Colors, Coordinate } from './Types'
 
 const colorMap = {
   'p': 'rgb(135, 41, 150)',
@@ -12,6 +12,8 @@ const colorMap = {
 }
 
 const factor = .7
+const circleFactor = .65
+const rectFactor = .63
 const flowerFactor = .33
 const innerQuadrogramFactor = .4
 const outerQuadrogramFactor = .1
@@ -19,8 +21,8 @@ const diamondFactor = .15
 const stoneFactor = .02
 
 const shapeMap = {
-  1: (x, y, color) => svg`<rect fill=${colorMap[color]} x=${x + 0.5 - factor / 2} y=${y + 0.5 - factor / 2} width=${factor} height=${factor} />`,
-  2: (x, y, color) => svg`<circle fill=${colorMap[color]} r=${factor / 1.9} cx=${x + .5} cy=${y + .5} />`,
+  1: (x, y, color) => svg`<rect fill=${colorMap[color]} x=${x + 0.5 - rectFactor / 2} y=${y + 0.5 - rectFactor / 2} width=${rectFactor} height=${rectFactor} />`,
+  2: (x, y, color) => svg`<circle fill=${colorMap[color]} r=${circleFactor / 1.9} cx=${x + .5} cy=${y + .5} />`,
   3: (x, y, color) => svg`
     <circle fill=${colorMap[color]} r=${factor / 4} cx=${x + 1 -flowerFactor} cy=${y + .5} />
     <circle fill=${colorMap[color]} r=${factor / 4} cx=${x + flowerFactor} cy=${y + .5} />
@@ -46,7 +48,8 @@ const shapeMap = {
 
 export class QwirkleBoard extends HTMLElement {
 
-  private state: Array<any> 
+  private state: Array<any> = []
+  private highlights: Array<Coordinate> = []
 
   private smallestX = 0
   private smallestY = 0
@@ -58,6 +61,7 @@ export class QwirkleBoard extends HTMLElement {
 
   connectedCallback () {
     this.state = JSON.parse(this.getAttribute('state'))
+    this.highlights = JSON.parse(this.getAttribute('highlights') ?? '[]')
 
     for (const [x, y] of this.state) {
       if (x < this.smallestX) this.smallestX = x
@@ -78,17 +82,38 @@ export class QwirkleBoard extends HTMLElement {
         transform: scale(1, -1);
         display: block;
       }
+
+      qwirkle-board .stone {
+        fill: rgb(44, 46, 53);
+      }
+
+      qwirkle-board[highlights] .stone:not(.highlighted) {
+        opacity: .5;
+      }
+
+      qwirkle-board .highlighted .background {
+        opacity: 1;
+        stroke: #f76a25;
+        stroke-width: .07;
+      }
+
+
     </style>
     ${ svg`
     <svg style=${`width: calc(var(--stoneWidth) * ${this.horizontalStoneCount})`} viewBox=${`${this.smallestX} ${this.smallestY} ${this.horizontalStoneCount} ${this.verticalStoneCount}`} xmlns="http://www.w3.org/2000/svg">
-      ${this.state.map(([x, y, color, shape]) => svg`
-        <rect fill="rgb(44, 46, 53)" x=${x + stoneFactor} y=${y + stoneFactor} width=${1 - stoneFactor * 2} height=${1 - stoneFactor * 2} />
-        ${shapeMap[shape](x, y, color)}
-      `)}
+      ${this.state.map(([x, y, color, shape]) => {
+        const isHighlighted = !!this.highlights.find(highlight => highlight[0] === x && highlight[1] === y)
+
+        return svg`
+          <g class=${(isHighlighted ? 'highlighted' : null ) + ' stone'}>
+          <rect class="background" x=${x + stoneFactor} y=${y + stoneFactor} width=${1 - stoneFactor * 2} height=${1 - stoneFactor * 2} />
+          ${shapeMap[shape](x, y, color)}
+          </g>
+        `
+      })}
     </svg>
   `}`)
   }
-
 }
 
 customElements.define('qwirkle-board', QwirkleBoard)
