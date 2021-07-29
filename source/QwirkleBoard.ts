@@ -1,5 +1,6 @@
 /** @ts-ignore */
-import { svg, html, render } from 'uhtml/async'
+import {define, render, html, svg, css} from 'uce';
+
 import { Colors, Coordinate } from './Types'
 
 const colorMap = {

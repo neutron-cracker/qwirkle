@@ -1,17 +1,19 @@
 /** @ts-ignore */
 import { referenceState1, referenceState2 } from './stateReferences';
-
+import { State } from './State'
 /** @ts-ignore */
-import { render, html } from 'uhtml'
+import {define, render, html, svg, css} from 'uce';
+
 import './QwirkleTurns'
 import './QwirkleBoard'
 
+const currentIndex = 1
+
+const testState = new State();
+testState.setInitial(referenceState1)
+
 render(document.body, html`
 
-  <qwirkle-turns>
-    <qwirkle-board state=${JSON.stringify(referenceState1)} />
-    <qwirkle-board highlights="[[-2,-1], [-2,-3], [-1,-2], [-3,-2]]" state=${JSON.stringify(referenceState1)} />
-    <qwirkle-board state=${JSON.stringify(referenceState2)} />
-  </qwirkle-turns>
+  <qwirkle-turns index=${currentIndex} .state=${testState} />
 
 `)
