@@ -83,6 +83,10 @@ export class QwirkleBoard extends HTMLElement {
         display: block;
       }
 
+      qwirkle-board {
+        transition: opacity .4s ease-in-out;
+      }
+
       qwirkle-board .stone {
         fill: rgb(44, 46, 53);
       }
@@ -97,6 +101,9 @@ export class QwirkleBoard extends HTMLElement {
         stroke-width: .07;
       }
 
+      qwirkle-board.hidden {
+        opacity: 0;
+      }
 
     </style>
     ${ svg`
