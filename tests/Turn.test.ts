@@ -27,8 +27,8 @@ const wrongTurn = new Turn([
 ], testState)
 
 const wrongTurn2 = new Turn([
+  [-1, 2, Colors.Blue, Shapes.Square],
   [-1, 3, Colors.Blue, Shapes.Circle],
-  [-1, 2, Colors.Blue, Shapes.Square,]
 ], testState)
 
 const qwirkleTurn = new Turn([

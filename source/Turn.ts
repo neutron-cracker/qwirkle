@@ -19,8 +19,10 @@ export class Turn {
     const turnStonesAreValid = isBar(allStonesOfBar)
 
     const allUniqueStones = this.stones.length === this.stones.filter(onlyUnique).length
-  
-    const allBarsAreValid = barIterator(this.stones).every(bar => isValidBar(bar, this.state.turns.length === 0))
+    
+    // In the predicter a set of stones can be added to the state in the initialStones. This means that a turn added to a state without turns, but with initialstones is not the first stone.
+    // We had a bug with this, and it was pretty dirty and hard to deal with.
+    const allBarsAreValid = barIterator(this.stones).every(bar => isValidBar(bar, this.state.turns.length === 0 && this.state.initialStones.length === 0))
 
     return allUniqueStones && turnStonesAreValid && allBarsAreValid;
   }
@@ -51,7 +53,7 @@ export class Turn {
    * It does not incluse the state.
    */
   toString() {
-    const sortedStones = this.stones.sort(sortStones)
+    const sortedStones = [...this.stones].sort(sortStones)
     return sortedStones.map(stone => stone.toString()).join('')
   }
 

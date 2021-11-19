@@ -67,7 +67,27 @@ test('getPossibleTurns further iteration', () => {
     [Colors.Blue, Shapes.Square],
     [Colors.Blue, Shapes.Circle],
   ])
+})
 
-  console.log(turns)
+test('Bug with turn.isValid and initialStones', () => {
+  const testState = new State()
+  testState.setInitial(referenceState1)
+  const predictor = new Predictor(testState);
 
+  const turns = predictor.getPossibleTurns([
+    [Colors.Blue, Shapes.Square],
+    [Colors.Blue, Shapes.Circle],
+  ]);
+
+  turns.sort((a, b) => a.toString().localeCompare(b.toString()))
+  console.log(turns.map(turn => "stones: " + turn.stones.map(stone => `{${stone.color} ${Shapes[stone.shape]}: [${stone.x}, ${stone.y}]}`).join(', ')).join('\n'))
+  console.log(turns.toString())
+
+  const wrongTurns = turns.filter(turn => turn.stones.some(stone => stone.x === -1 && stone.y === 2 && stone.shape === Shapes.Square && stone.color === Colors.Blue))
+  console.log(wrongTurns)
+  wrongTurns.sort((a, b) => a.toString().localeCompare(b.toString()))
+  console.log(wrongTurns.map(turn => "stones: " + turn.stones.map(stone => `{${stone.color} ${Shapes[stone.shape]}: [${stone.x}, ${stone.y}]}`).join(', ')).join('\n'))
+  console.log(wrongTurns.toString())
+
+  expect(wrongTurns.length).toBe(0)
 })

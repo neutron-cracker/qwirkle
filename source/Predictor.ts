@@ -104,21 +104,23 @@ export class Predictor {
     }
 
 
-    getBestPossibleTurns(unplayedStones: Array<ColorShape>){
-        // output one or multiple stones that give the best score.
-        // required items: state, possibleStones, unplayedStones
-
+    getBestPossibleTurns(unplayedStones: Array<ColorShape>): Array<Turn>{
+        const turns = this.getPossibleTurns(unplayedStones)
+        turns.sort((a, b) => b.score - a.score)
+        const maxScore = turns[0].score
+        return turns.filter(turn => turn.score === maxScore)
     }
     
 
-    getPossibleTurns (colorShapes: Array<ColorShape>) {
+    getPossibleTurns (colorShapes: Array<ColorShape>): Array<Turn> {
         const possibleTurns: Array<Turn> = []
         for (const colorShape of colorShapes) {           
             this.processColorshape(colorShape, colorShapes.filter(innerColorShape => innerColorShape.toString() !== colorShape.toString()), possibleTurns)
         }
-        return possibleTurns
+        return possibleTurns//.filter(turn => turn.isValid)
     }
     
+    // Don't give a buildupTurn when using this. It is used for the recursion inside.
     processColorshape (colorShape: ColorShape, otherColorShapes: Array<ColorShape>, possibleTurns: Array<Turn>, buildupTurn: Turn = null) {
         const possibleCoordinates: Array<Coordinate> = [];
 
@@ -166,12 +168,12 @@ export class Predictor {
 
             if (otherColorShapes.length === 0) {
                 this.pushBuildupTurnToPossibleTurns(possibleTurns, newBuildupTurn);
-                continue
             }
-
-            for (const otherColorShape of otherColorShapes) {
-                const filteredOtherColorShapes = otherColorShapes.filter(innerColorShape => innerColorShape.toString() !== otherColorShape.toString());
-                this.processColorshape(otherColorShape, filteredOtherColorShapes, possibleTurns, newBuildupTurn);           
+            else {
+                for (const otherColorShape of otherColorShapes) {
+                    const filteredOtherColorShapes = otherColorShapes.filter(innerColorShape => innerColorShape.toString() !== otherColorShape.toString());
+                    this.processColorshape(otherColorShape, filteredOtherColorShapes, possibleTurns, newBuildupTurn);           
+                }    
             }
         }
     }
