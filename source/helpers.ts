@@ -90,11 +90,10 @@ export function barIterator (barStones: Array<Stone> = []) {
     const firstStone = barStones[0]
     const oppositeDirection = direction === Direction.Horizontal ? Direction.Vertical : Direction.Horizontal;
     bars.push(firstStone.bar(direction, barStones))
-    barStones.every(stone => {
+    for (const stone of barStones) {
         const possibleBar = stone.bar(oppositeDirection, barStones)
         if (possibleBar.length > 1) bars.push(possibleBar)
-    })
-
+    }
     return bars
 }
 
