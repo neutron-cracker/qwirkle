@@ -22,7 +22,7 @@ export class State extends EventTarget {
     }
   }
 
-  get stones() {
+  get stones(): Array<Stone> {
     return [...this.turns.flatMap(turn => turn.stones), ...this.initialStones]
   }
 

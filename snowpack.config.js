@@ -5,10 +5,11 @@
 module.exports = {
   mount: {
     'source': '/',
-    'tests': '/'
+    'tests': '/',
+    'scss': '/css'
   },
   plugins: [
-    /* ... */
+    '@snowpack/plugin-sass'
   ],
   packageOptions: {
     /* ... */
