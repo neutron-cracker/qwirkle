@@ -1,6 +1,6 @@
-/** @ts-ignore */
-import {define, render, html, svg, css} from 'uce';
-
+import { SVG, html, svg, render } from 'ube';
+import { State } from './State';
+import { Stone } from './Stone';
 import { Colors, Coordinate } from './Types'
 
 const colorMap = {
@@ -47,81 +47,27 @@ const shapeMap = {
   `} />`,
   6: (x, y, color) => svg`${shapeMap[4](x, y, color)}${shapeMap[4](x, y, color, true)}`,}
 
-export class QwirkleBoard extends HTMLElement {
+export class QwirkleBoard extends (SVG.G as typeof SVGGElement) {
 
-  private state: Array<any> = []
-  private highlights: Array<Coordinate> = []
-
-  private smallestX = 0
-  private smallestY = 0
-  private biggestX = 0
-  private biggestY = 0
-  private horizontalStoneCount = 0
-  private verticalStoneCount = 0
+  private stones: Array<Stone>
 
 
-  connectedCallback () {
-    this.state = JSON.parse(this.getAttribute('state'))
-    this.highlights = JSON.parse(this.getAttribute('highlights') ?? '[]')
-
-    for (const [x, y] of this.state) {
-      if (x < this.smallestX) this.smallestX = x
-      if (x > this.biggestX) this.biggestX = x
-      if (y < this.smallestY) this.smallestY = y
-      if (y > this.biggestY) this.biggestY = y
-    }
-    this.horizontalStoneCount = this.biggestX - this.smallestX + 1
-    this.verticalStoneCount = this.biggestY - this.smallestY + 1
+  upgradedCallback () {
+    this.classList.add('qwirkle-board')
     this.draw()
   }
 
   draw () {
-    render(this, html`
-    <style>
-      :root {--stoneWidth: 40px;}
-      qwirkle-board {
-        transform: scale(1, -1);
-        display: block;
-      }
-
-      qwirkle-board {
-        transition: opacity .4s ease-in-out;
-      }
-
-      qwirkle-board .stone {
-        fill: rgb(44, 46, 53);
-      }
-
-      qwirkle-board[highlights] .stone:not(.highlighted) {
-        opacity: .5;
-      }
-
-      qwirkle-board .highlighted .background {
-        opacity: 1;
-        stroke: #f76a25;
-        stroke-width: .07;
-      }
-
-      qwirkle-board.hidden {
-        opacity: 0;
-      }
-
-    </style>
-    ${ svg`
-    <svg style=${`width: calc(var(--stoneWidth) * ${this.horizontalStoneCount})`} viewBox=${`${this.smallestX} ${this.smallestY} ${this.horizontalStoneCount} ${this.verticalStoneCount}`} xmlns="http://www.w3.org/2000/svg">
-      ${this.state.map(([x, y, color, shape]) => {
-        const isHighlighted = !!this.highlights.find(highlight => highlight[0] === x && highlight[1] === y)
-
-        return svg`
-          <g class=${(isHighlighted ? 'highlighted' : null ) + ' stone'}>
-          <rect class="background" x=${x + stoneFactor} y=${y + stoneFactor} width=${1 - stoneFactor * 2} height=${1 - stoneFactor * 2} />
-          ${shapeMap[shape](x, y, color)}
-          </g>
-        `
-      })}
-    </svg>
-  `}`)
-  }
+    render (this, svg`
+    ${this.stones.map(({x, y, color, shape}) => {
+      console.log(SVG)
+      return svg`
+      <g class=${'stone'}>
+      <rect class="background" x=${x + stoneFactor} y=${y + stoneFactor} width=${1 - stoneFactor * 2} height=${1 - stoneFactor * 2} />
+      ${shapeMap[shape](x, y, color)}
+      </g>  
+      `
+    })}
+  `
+    )}
 }
-
-customElements.define('qwirkle-board', QwirkleBoard)
