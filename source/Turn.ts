@@ -23,7 +23,7 @@ export class Turn {
     // In the predicter a set of stones can be added to the state in the initialStones. This means that a turn added to a state without turns, but with initialstones is not the first stone.
     // We had a bug with this, and it was pretty dirty and hard to deal with.
     const bars = barIterator(this.stones)
-    const firstTurn = this.state.turns.length === 0 && this.state.initialStones.length === 0
+    const firstTurn = this.state.stones.length === 0
     const allBarsAreValid = bars.every(bar => isValidBar(bar, firstTurn))
 
     return allUniqueStones && turnStonesAreValid && allBarsAreValid;
