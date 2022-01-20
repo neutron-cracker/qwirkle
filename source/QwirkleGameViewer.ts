@@ -39,14 +39,11 @@ export class QwirkleGameViewer extends (SVG.SVG as typeof SVGSVGElement) {
     this.horizontalStoneCount = this.largestX - this.smallestX + 1
     this.verticalStoneCount = this.largestY - this.smallestY + 1
 
-    // this.viewBox = `width: calc(var(--stoneWidth) * ${this.horizontalStoneCount})`
-    // this.attributes.setAttribute(`viewbox`, `${this.smallestX} ${this.smallestY} ${this.horizontalStoneCount} ${this.verticalStoneCount}`)
-    const viewbox = document.createAttributeNS("http://www.w3.org/2000/svg", 'viewbox')
-    viewbox.nodeValue = `${this.smallestX} ${this.smallestY} ${this.horizontalStoneCount} ${this.verticalStoneCount}`
-    this.attributes.setNamedItemNS(viewbox)
+    this.setAttribute('viewBox', `${this.smallestX} ${this.smallestY} ${this.horizontalStoneCount} ${this.verticalStoneCount}`)
+    this.setAttribute('style', `width: calc(var(--stoneWidth) * ${this.horizontalStoneCount})`)
 
     render(this, svg`
-        ${this.state.turns.map(turn => html`
+        ${this.state.turns.map(turn => svg`
           <${QwirkleBoard} .stones=${turn.stones} />
         `)}
     `)
