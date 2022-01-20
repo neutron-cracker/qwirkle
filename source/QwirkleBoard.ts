@@ -51,7 +51,6 @@ export class QwirkleBoard extends (SVG.G as typeof SVGGElement) {
 
   private stones: Array<Stone>
 
-
   upgradedCallback () {
     this.classList.add('qwirkle-board')
     this.draw()

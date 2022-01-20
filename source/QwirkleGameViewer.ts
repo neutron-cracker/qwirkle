@@ -1,8 +1,8 @@
-import {HTML, render, html, svg} from 'ube';
+import {SVG, HTML, render, html, svg} from 'ube';
 import { QwirkleBoard } from './QwirkleBoard'
 import { State } from './State'
 
-export class QwirkleGameViewer extends (HTML.Div as typeof HTMLElement) {
+export class QwirkleGameViewer extends (SVG.SVG as typeof SVGSVGElement) {
 
   public activeIndex: number
   private state: State
@@ -39,14 +39,16 @@ export class QwirkleGameViewer extends (HTML.Div as typeof HTMLElement) {
     this.horizontalStoneCount = this.largestX - this.smallestX + 1
     this.verticalStoneCount = this.largestY - this.smallestY + 1
 
-
+    // this.viewBox = `width: calc(var(--stoneWidth) * ${this.horizontalStoneCount})`
+    // this.attributes.setAttribute(`viewbox`, `${this.smallestX} ${this.smallestY} ${this.horizontalStoneCount} ${this.verticalStoneCount}`)
+    const viewbox = document.createAttributeNS("http://www.w3.org/2000/svg", 'viewbox')
+    viewbox.nodeValue = `${this.smallestX} ${this.smallestY} ${this.horizontalStoneCount} ${this.verticalStoneCount}`
+    this.attributes.setNamedItemNS(viewbox)
 
     render(this, svg`
-    <svg style=${`width: calc(var(--stoneWidth) * ${this.horizontalStoneCount})`} viewBox=${`${this.smallestX} ${this.smallestY} ${this.horizontalStoneCount} ${this.verticalStoneCount}`} xmlns="http://www.w3.org/2000/svg">
         ${this.state.turns.map(turn => html`
           <${QwirkleBoard} .stones=${turn.stones} />
         `)}
-    </svg>
     `)
   }
 
