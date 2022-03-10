@@ -26,7 +26,9 @@ export class Turn {
     const firstTurn = this.state.stones.length === 0
     const allBarsAreValid = bars.every(bar => isValidBar(bar, firstTurn))
 
-    return allUniqueStones && turnStonesAreValid && allBarsAreValid;
+    const emptySpaces = !this.stones.some(turnStone => this.state.stones.find(boardStone => boardStone.coordinates.toString() === turnStone.coordinates.toString()))
+
+    return allUniqueStones && turnStonesAreValid && allBarsAreValid && emptySpaces;
   }
 
   public get score () {

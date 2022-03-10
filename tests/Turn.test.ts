@@ -31,6 +31,11 @@ const wrongTurn2 = new Turn([
   [-1, 3, Colors.Blue, Shapes.Circle],
 ], testState)
 
+const wrongTurn3 = new Turn([
+  [0, -2, Colors.Red, Shapes.Flower, 1],
+  [-3, -2, Colors.Blue, Shapes.Flower, 1]
+], testState)
+
 const qwirkleTurn = new Turn([
   [-2, -4, Colors.Green, Shapes.Quadrogram, 1],
   [-2, -5, Colors.Green, Shapes.Square, 1]
@@ -44,6 +49,10 @@ test('turn validation', () => {
 
 test('turn validation with correct bar with gaps', () => {
   expect(correctTurn4.isValid).toBe(true)
+})
+
+test('turn validation with stone on top of another', () => {
+  expect(wrongTurn3.isValid).toBe(false)
 })
 
 test('qwirklepoints are added', () => {

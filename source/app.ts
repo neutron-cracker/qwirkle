@@ -6,7 +6,9 @@ import { Turn } from './Turn';
 import { Colors, Shapes } from './Types';
 import { QwirkleGameViewer } from './QwirkleGameViewer';
 
-const currentIndex = 1
+//@ts-ignore
+window.count = 0
+let currentIndex = 2
 
 const testState = new State();
 testState.setInitial(referenceState1)
@@ -32,8 +34,27 @@ testState.addTurn(correctTurn2)
 testState.addTurn(correctTurn3)
 testState.addTurn(correctTurn4)
 
-render(document.body, html`
+let gameViewer: QwirkleGameViewer
 
- <${QwirkleGameViewer} .state=${testState}/>
+const updateIndex = (value: number) => {
+  currentIndex += value
+  if(currentIndex >= gameViewer.stoneSets.length) {
+      currentIndex = gameViewer.stoneSets.length
+  }
+  else if (currentIndex < 0) {
+      currentIndex = 0
+  }
+  draw()
+}
 
-`)
+function draw() {
+    render(document.body, html`
+    <div>
+      <button onclick=${() => updateIndex(-1)}>-</button>
+      <${QwirkleGameViewer} .state=${testState} index=${currentIndex} ref=${element => gameViewer = element}/>
+      <button onclick=${() => updateIndex(+1)}>+</button>
+    </div>
+  `)
+}
+
+draw()

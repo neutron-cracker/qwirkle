@@ -14,14 +14,14 @@ export class QwirkleGameViewer extends (SVG.SVG as typeof SVGSVGElement) {
   private verticalStoneCount: number
 
   static get observedAttributes() { return ['index', 'l']; }
-
   upgradedCallback () {
-    this.activeIndex = 0
+    this.activeIndex = this.hasAttribute('index') ? parseInt(this.getAttribute('index')) : -1
+    this.setAttribute('index', this.activeIndex.toString())
     this.classList.add('qwirkle-game-viewer')
-    this.update()
     this.draw()
     this.setAttribute("transform", "scale(1 -1)")
   }
+  get stoneSets() {return [this.state.initialStones, ...this.state.turns.map(turn => turn.stones)].filter(Boolean)}  
 
   draw () {
     this.smallestX = 0
@@ -42,26 +42,30 @@ export class QwirkleGameViewer extends (SVG.SVG as typeof SVGSVGElement) {
 
     this.setAttribute('viewBox', `${this.smallestX} ${this.smallestY} ${this.horizontalStoneCount} ${this.verticalStoneCount}`)
     this.setAttribute('style', `width: calc(var(--stoneWidth) * ${this.horizontalStoneCount})`)
-
     render(this, svg`
-       <${QwirkleBoard} .stones=${this.state.initialStones} />
-        ${this.state.turns.map(turn => svg`
-          <${QwirkleBoard} .stones=${turn.stones} />
+        ${this.stoneSets.map((stoneSet, index) => svg`
+          <${QwirkleBoard} .stones=${stoneSet} class=${`qwirkle-board ${index < this.activeIndex ? '' : (index === this.activeIndex ? 'active' : 'hidden')}`}/>
         `)}
     `)
   }
 
-  update () {
-    for (const [index, child] of Array.from(this.querySelectorAll('qwirkle-board')).entries()) {
-      child.classList[index === this.activeIndex ? 'remove' : 'add']('hidden')
-    }
-  }
-
   attributeChangedCallback(name, oldValue, newValue) {
-    if (name = 'index') {
+    //@ts-ignore
+    window.count++
+    //@ts-ignore
+    if(window.count > 300) debugger
+    //console.log(this.activeIndex)
+    if (name = 'index' && oldValue !== newValue) {
         this.activeIndex = parseInt(newValue)
-        this.update()      
+        if (this.activeIndex < 0) {
+          this.activeIndex = 0
+          this.setAttribute('index', this.activeIndex.toString())
+        } 
+        else if (this.activeIndex + 1 >= this.stoneSets.length) {
+          this.activeIndex = this.stoneSets.length
+          this.setAttribute('index', this.activeIndex.toString())
+        }
+        this.draw()
     }
   }
-
 }

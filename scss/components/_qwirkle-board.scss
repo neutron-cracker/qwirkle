@@ -1,12 +1,15 @@
 .qwirkle-board {
-//   transform: scale(1, -1);
   transition: opacity .4s ease-in-out;
-
+  opacity: 0.8;
   .stone {
     fill: rgb(44, 46, 53);
   }
  
   &.hidden {
     opacity: 0;
+  }
+
+  &.active {
+    opacity: 1;
   }
 }
