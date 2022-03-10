@@ -34,6 +34,6 @@ testState.addTurn(correctTurn4)
 
 render(document.body, html`
 
- <${QwirkleGameViewer} .state=${testState} />
+ <${QwirkleGameViewer} .state=${testState} transform="scale(-1 -1)"/>
 
 `)

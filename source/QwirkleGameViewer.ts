@@ -20,6 +20,7 @@ export class QwirkleGameViewer extends (SVG.SVG as typeof SVGSVGElement) {
     this.classList.add('qwirkle-game-viewer')
     this.update()
     this.draw()
+    this.setAttribute("transform", "scale(1 -1)")
   }
 
   draw () {
@@ -43,6 +44,7 @@ export class QwirkleGameViewer extends (SVG.SVG as typeof SVGSVGElement) {
     this.setAttribute('style', `width: calc(var(--stoneWidth) * ${this.horizontalStoneCount})`)
 
     render(this, svg`
+       <${QwirkleBoard} .stones=${this.state.initialStones} />
         ${this.state.turns.map(turn => svg`
           <${QwirkleBoard} .stones=${turn.stones} />
         `)}
