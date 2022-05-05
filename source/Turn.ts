@@ -25,10 +25,10 @@ export class Turn {
     const bars = barIterator(this.stones)
     const firstTurn = this.state.stones.length === 0
     const allBarsAreValid = bars.every(bar => isValidBar(bar, firstTurn))
+   
+    const doubleStackedStones = this.stones.filter(turnStone => this.state.stonesCoordinates.get(turnStone.coordinates(true)));
 
-    const emptySpaces = !this.stones.some(turnStone => this.state.stones.find(boardStone => boardStone.coordinates.toString() === turnStone.coordinates.toString()))
-
-    return allUniqueStones && turnStonesAreValid && allBarsAreValid && emptySpaces;
+    return allUniqueStones && turnStonesAreValid && allBarsAreValid && !doubleStackedStones.length ;
   }
 
   public get score () {

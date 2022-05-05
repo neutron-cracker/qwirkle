@@ -15,11 +15,11 @@ export class State extends EventTarget {
   }
 
   addTurn(turn: Turn) {
-    if (turn.isValid) {
-      this.turns.push(turn)
-      this.updateCache(turn.stones)
-      if (turn.stones.length) this.dispatchEvent(new CustomEvent('turn-added', { detail: turn }))
-    }
+    if (!turn.isValid) throw new Error('Given turn was invalid')
+
+    this.turns.push(turn)
+    this.updateCache(turn.stones)
+    if (turn.stones.length) this.dispatchEvent(new CustomEvent('turn-added', { detail: turn }))
   }
 
   get stones(): Array<Stone> {

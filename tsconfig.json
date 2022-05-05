@@ -3,7 +3,7 @@
     "moduleResolution": "Node",
     "target": "ES2019",
     "esModuleInterop": true,
-    "lib": ["es2017", "dom", "esnext.array"],
+    "lib": ["es2019", "dom", "esnext.array"],
     "baseUrl": "./",
   }
 }

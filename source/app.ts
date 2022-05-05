@@ -34,6 +34,8 @@ testState.addTurn(correctTurn2)
 testState.addTurn(correctTurn3)
 testState.addTurn(correctTurn4)
 
+console.log(testState);
+
 let gameViewer: QwirkleGameViewer
 
 const updateIndex = (value: number) => {

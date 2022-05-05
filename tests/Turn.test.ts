@@ -19,7 +19,7 @@ const correctTurn3 = new Turn([
 
 const correctTurn4 = new Turn([
   [0, -2, Colors.Red, Shapes.Flower, 1],
-  [-3, -2, Colors.Blue, Shapes.Flower, 1]
+  [-4, -2, Colors.Blue, Shapes.Flower, 1]
 ], testState)
 
 const wrongTurn = new Turn([
