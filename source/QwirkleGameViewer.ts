@@ -21,6 +21,7 @@ export class QwirkleGameViewer extends (SVG.SVG as typeof SVGSVGElement) {
     this.draw()
     this.setAttribute("transform", "scale(1 -1)")
   }
+
   get stoneSets() {return [this.state.initialStones, ...this.state.turns.map(turn => turn.stones)].filter(Boolean)}  
 
   draw () {
@@ -40,28 +41,28 @@ export class QwirkleGameViewer extends (SVG.SVG as typeof SVGSVGElement) {
     this.horizontalStoneCount = this.largestX - this.smallestX + 1
     this.verticalStoneCount = this.largestY - this.smallestY + 1
 
+    const hasActive = this.activeIndex !== -1 && this.activeIndex !== this.stoneSets.length
+
+    this.classList.toggle('has-active', hasActive)
+
     this.setAttribute('viewBox', `${this.smallestX} ${this.smallestY} ${this.horizontalStoneCount} ${this.verticalStoneCount}`)
     this.setAttribute('style', `width: calc(var(--stoneWidth) * ${this.horizontalStoneCount})`)
     render(this, svg`
         ${this.stoneSets.map((stoneSet, index) => svg`
-          <${QwirkleBoard} .stones=${stoneSet} class=${`qwirkle-board ${index < this.activeIndex ? '' : (index === this.activeIndex ? 'active' : 'hidden')}`}/>
+          <${QwirkleBoard} .stones=${stoneSet} 
+          class=${`${index < this.activeIndex ? '' : (index === this.activeIndex ? 'active' : 'hidden')} qwirkle-board`}/>
         `)}
     `)
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    //@ts-ignore
-    window.count++
-    //@ts-ignore
-    if(window.count > 300) debugger
-    //console.log(this.activeIndex)
     if (name = 'index' && oldValue !== newValue) {
         this.activeIndex = parseInt(newValue)
-        if (this.activeIndex < 0) {
-          this.activeIndex = 0
+        if (this.activeIndex < -1) {
+          this.activeIndex = -1
           this.setAttribute('index', this.activeIndex.toString())
         } 
-        else if (this.activeIndex + 1 >= this.stoneSets.length) {
+        else if (this.activeIndex >= this.stoneSets.length) {
           this.activeIndex = this.stoneSets.length
           this.setAttribute('index', this.activeIndex.toString())
         }

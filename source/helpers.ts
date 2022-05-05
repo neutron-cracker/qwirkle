@@ -225,3 +225,5 @@ export const getPossibleColorShapesForCoordinate = (stateStones: Array<Stone>, c
 
     return possibleColorShapes
 }
+
+export const normalizeZero = (n: number) => n === 0 ? 0 : n;

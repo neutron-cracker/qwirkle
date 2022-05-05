@@ -1,4 +1,4 @@
-import { sameItems, isBar, createQwirkleBar, getIntersection} from "../source/helpers";
+import { sameItems, isBar, createQwirkleBar, getIntersection, normalizeZero} from "../source/helpers";
 import { Colors, Shapes } from '../source/Types'
 import { Stone } from '../source/Stone'
 
@@ -80,4 +80,14 @@ test('intersection', () => {
 
   const intersection2 = getIntersection(d, e, f)
   expect(intersection2).toEqual([])
+})
+
+/**
+ * In javascript you have a negative zero value that we love, so we just get rid of it.
+ * Post on StackOverflow: https://stackoverflow.com/questions/441893/which-is-faster-math-absvalue-or-value-1/441915#441915
+ */ 
+test('normalize zero', () => {
+  const negativeZero = -0;
+  const result = normalizeZero(negativeZero);
+  expect(result.toString()).toBe("0");
 })
