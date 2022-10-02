@@ -4,9 +4,7 @@ import { shapeMap } from './shapeMap';
 import { State } from './State';
 import { Stone } from './Stone';
 import { Colors, Coordinate } from './Types'
-
-
-  const stoneFactor = .02
+import { stoneFactor } from './consts';
 
 export class QwirkleBoard extends (SVG.G as typeof SVGGElement) {
 

@@ -44,4 +44,29 @@ export class State extends EventTarget {
       }
     }
   }
+
+  getBoardSizeInformation () {
+    let smallestX = 0
+    let smallestY = 0
+    let largestX = 0
+    let largestY = 0
+    let horizontalStoneCount = 0
+    let verticalStoneCount = 0
+
+    for (const { x, y } of this.stones) {
+      if (x < smallestX) smallestX = x
+      if (x > largestX) largestX = x
+      if (y < smallestY) smallestY = y
+      if (y > largestY) largestY = y
+    }
+    horizontalStoneCount = largestX - smallestX + 1
+    verticalStoneCount = largestY - smallestY + 1
+
+    return {
+      smallestX,
+      smallestY,
+      horizontalStoneCount,
+      verticalStoneCount
+    }
+  }
 }
