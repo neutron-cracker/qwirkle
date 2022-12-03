@@ -1,13 +1,13 @@
 import {svg} from 'ube';
-import { Shapes } from './Types';
+import { Shapes, Colors } from './Types';
 
 const colorMap = {
-  'p': 'rgb(135, 41, 150)',
-  'r': 'rgb(255, 46, 23)',
-  Colors.Blue: 'rgb(0, 144, 211)',
-  'y': 'rgb(255, 217, 57)',
-  'g': 'rgb(136, 201, 70)',
-  'o': 'rgb(255, 144, 39)',
+  [Colors.Purple]: 'rgb(135, 41, 150)',
+  [Colors.Red]: 'rgb(255, 46, 23)',
+  [Colors.Blue]: 'rgb(0, 144, 211)',
+  [Colors.Yellow]: 'rgb(255, 217, 57)',
+  [Colors.Green]: 'rgb(136, 201, 70)',
+  [Colors.Orange]: 'rgb(255, 144, 39)',
 }
 
 const factor = .7

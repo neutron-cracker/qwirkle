@@ -2,18 +2,30 @@ import { Turn } from './Turn';
 import { StoneNotation, Coordinate, Direction } from './Types';
 import { Stone } from './Stone';
 import { StoneBag } from './StoneBag';
+import { Player } from './Player';
 
 export class State extends EventTarget {
 
-  public turns: Array<Turn> = [];
+  public turns: Array<Turn> = []
   public stonesCoordinates: Map<string, Coordinate> = new Map()
   public borderCoordinates: Map<string, Coordinate> = new Map()
-  public initialStones: Array<Stone> = [];
+  public initialStones: Array<Stone> = []
+  public bag: StoneBag = new StoneBag()
+  public playersHands: Array<Player> = []
+
+  constructor (playerCount: number = 2) {
+    super()
+    for (let index = 1; index <= playerCount; index++) {
+      this.playersHands.push(new Player(index))      
+    }
+
+    console.log(this.playersHands)
+  }
 
   setInitial (initialStoneNotations: Array<StoneNotation> = []) {
     this.initialStones = initialStoneNotations.map( initialStoneNotation => new Stone(initialStoneNotation, this));
     this.updateCache(this.initialStones);
-    new StoneBag();
+    this.bag.removeStones(this.initialStones.map(stone => [stone.color, stone.shape]))
   }
 
   addTurn(turn: Turn) {
@@ -26,10 +38,6 @@ export class State extends EventTarget {
 
   get stones(): Array<Stone> {
     return [...this.turns.flatMap(turn => turn.stones), ...this.initialStones]
-  }
-
-  get bag(): StoneBag {
-    return new StoneBag()
   }
 
   updateCache (stones: Array<Stone>) {

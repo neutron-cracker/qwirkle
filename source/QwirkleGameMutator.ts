@@ -17,7 +17,7 @@ export class QwirkleGameMutator extends (HTML.Div as typeof HTMLElement) {
     this.classList.add('qwirkle-game-mutator')
 
     /** Development */
-    this.state = new State();
+    this.state = new State(2);
     this.state.setInitial(referenceState1)
     const correctTurn = new Turn([
         [2, 1, Colors.Red, Shapes.Circle, 1]
@@ -46,7 +46,7 @@ export class QwirkleGameMutator extends (HTML.Div as typeof HTMLElement) {
   }
 
   blockClick(x, y) {
-      console.log(x, y);
+      console.log(x, y)
   }
 
   draw () {

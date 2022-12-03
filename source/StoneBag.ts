@@ -5,12 +5,21 @@ export class StoneBag {
 
   constructor() {
     for (const color of Object.keys(Colors)) {
-      for (const [shape] of Object.entries(Shapes)) {
-        // console.log(shape)
-        this.stones.push([Colors[color], Shapes[shape]])
+      for (const shape of Object.keys(Shapes)) {
+        this.stones.push(
+          [Colors[color], Shapes[shape]],
+          [Colors[color], Shapes[shape]],
+          [Colors[color], Shapes[shape]]
+        )
       }
     }
-    // console.log(this.stones)
+  }
 
+  removeStones(toBeRemoved: Array<ColorShape>) {
+    for (const colorShape of toBeRemoved) {
+      const stone = this.stones.find(stone => stone.join() === colorShape.join())
+      const index = this.stones.indexOf(stone)
+      this.stones.splice(index, 1)
+    }
   }
 }
