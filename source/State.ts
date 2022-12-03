@@ -1,6 +1,7 @@
 import { Turn } from './Turn';
 import { StoneNotation, Coordinate, Direction } from './Types';
 import { Stone } from './Stone';
+import { StoneBag } from './StoneBag';
 
 export class State extends EventTarget {
 
@@ -12,6 +13,7 @@ export class State extends EventTarget {
   setInitial (initialStoneNotations: Array<StoneNotation> = []) {
     this.initialStones = initialStoneNotations.map( initialStoneNotation => new Stone(initialStoneNotation, this));
     this.updateCache(this.initialStones);
+    new StoneBag();
   }
 
   addTurn(turn: Turn) {
@@ -24,6 +26,10 @@ export class State extends EventTarget {
 
   get stones(): Array<Stone> {
     return [...this.turns.flatMap(turn => turn.stones), ...this.initialStones]
+  }
+
+  get bag(): StoneBag {
+    return new StoneBag()
   }
 
   updateCache (stones: Array<Stone>) {

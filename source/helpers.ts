@@ -107,24 +107,11 @@ export const sortStones = (a: Stone, b: Stone) => {
     const sortCoordinateResult = sortCoordinates(a.coordinates(false), b.coordinates(false));
     if (sortCoordinateResult != 0) return sortCoordinateResult
 
-    const sortColorResult = sortColors(a.color, b.color)
+    const sortColorResult = a.color.localeCompare(b.color)
     if (sortColorResult != 0) return sortColorResult
 
-    return a.shape - b.shape
+    return a.shape.localeCompare(b.shape)
 }
-
-export const sortColors = (a: Colors, b: Colors) => {
-    const colorIntMap = new Map<Colors, number>([
-        [Colors.Blue, 1],
-        [Colors.Green, 2],
-        [Colors.Orange, 3],
-        [Colors.Purple, 4],
-        [Colors.Red, 5],
-        [Colors.Yellow, 6]
-    ]);
-    return(colorIntMap[a] - colorIntMap[b])
-}
-
 
 /**
  * @see https://www.petermorlion.com/iterating-a-typescript-enum/
@@ -220,7 +207,7 @@ export const getPossibleColorShapesForCoordinate = (stateStones: Array<Stone>, c
 
     const possibleColorShapes = possibleColorShapeStrings.map((possibleColorShapeString: string): ColorShape => {
         const split = possibleColorShapeString.split('')
-        return [split[0], parseInt(split[1])] as ColorShape
+        return [split[0], split[1]] as ColorShape
     })
 
     return possibleColorShapes

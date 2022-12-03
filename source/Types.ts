@@ -16,12 +16,12 @@ export enum Colors {
 }
 
 export enum Shapes {
-  Square = 1,
-  Circle = 2,
-  Flower = 3,
-  Quadrogram = 4,
-  Diamond = 5,
-  Octogram = 6,
+  Square = 's',
+  Circle = 'c',
+  Flower = 'f',
+  Quadrogram = 'q',
+  Diamond = 'd',
+  Octogram = 'o',
 }
 
 export enum Direction {

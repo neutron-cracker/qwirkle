@@ -34,12 +34,12 @@ test('barQwirkle', () => {
   const testBarQwirkle = createQwirkleBar(bar)
 
   expect(testBarQwirkle).toEqual([
-    ['b', 1],
-    ['b', 2],
-    ['b', 3],
-    ['b', 4],
-    ['b', 5],
-    ['b', 6],
+    [Colors.Blue, Shapes.Square],
+    [Colors.Blue, Shapes.Circle],
+    [Colors.Blue, Shapes.Flower],
+    [Colors.Blue, Shapes.Quadrogram],
+    [Colors.Blue, Shapes.Diamond],
+    [Colors.Blue, Shapes.Octogram],
   ])
 
   const smallBar = [
@@ -49,19 +49,19 @@ test('barQwirkle', () => {
   const test2BarQwirkle = createQwirkleBar(smallBar)
 
   expect(test2BarQwirkle).toEqual([
-    ['b', 1],
-    ['b', 2],
-    ['b', 3],
-    ['b', 4],
-    ['b', 5],
-    ['b', 6],
+    [Colors.Blue, Shapes.Square],
+    [Colors.Blue, Shapes.Circle],
+    [Colors.Blue, Shapes.Flower],
+    [Colors.Blue, Shapes.Quadrogram],
+    [Colors.Blue, Shapes.Diamond],
+    [Colors.Blue, Shapes.Octogram],
 
-    ['p', 5],
-    ['r', 5],
-    ['b', 5],
-    ['y', 5],
-    ['g', 5],
-    ['o', 5],
+    [Colors.Purple, Shapes.Diamond],
+    [Colors.Red, Shapes.Diamond],
+    [Colors.Blue, Shapes.Diamond],
+    [Colors.Yellow, Shapes.Diamond],
+    [Colors.Green, Shapes.Diamond],
+    [Colors.Orange, Shapes.Diamond],
   ])
 })
 

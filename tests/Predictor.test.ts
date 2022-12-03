@@ -15,10 +15,10 @@ test('getPossibleColorShapesForCoordinate', () => {
   expect(possibleStones).toEqual([])
 
   const possibleStones1 = getPossibleColorShapesForCoordinate(testState.stones, [2 , 1], testState.stonesCoordinates)
-  expect(possibleStones1).toEqual([['r', 2]])
+  expect(possibleStones1).toEqual([[Colors.Red, Shapes.Circle]])
 
   const possibleStones2 = getPossibleColorShapesForCoordinate(testState.stones, [-2, 1], testState.stonesCoordinates)
-  expect(possibleStones2).toEqual([['g', 1], ['g', 4]])
+  expect(possibleStones2).toEqual([[Colors.Green, Shapes.Square], [Colors.Green, Shapes.Quadrogram]])
 })
 
 test('update possible stone cache', () => {
