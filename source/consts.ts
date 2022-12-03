@@ -1,0 +1,1 @@
+export const stoneFactor = 0.02
